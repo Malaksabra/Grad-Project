@@ -39,3 +39,28 @@ Grad-Project/
 ├── prototypes/    # HTML prototypes used as design reference
 └── README.md
 ```
+## Getting Started
+
+### Prerequisites
+
+- [Git](https://git-scm.com/downloads)
+- [Flutter](https://docs.flutter.dev/get-started/install) version **3.32.4** (stable). Do not upgrade Flutter without telling the team.
+- Google Chrome (to run the app on the web during development)
+
+Check that everything is installed:
+
+```bash
+git --version
+flutter --version
+```
+
+### Run the app
+
+```bash
+git clone https://github.com/Malaksabra/Grad-Project.git
+cd Grad-Project/mobile
+flutter pub get
+flutter run -d chrome
+```
+
+Always run Flutter commands from inside the `mobile` folder.
