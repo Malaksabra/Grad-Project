@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>خطوة بخطوة</title><meta name="color-scheme" content="light dark">
+<style>
+:root{--bg:#EAF6FF;--card:#fff;--fg:#22304A;--soft:#5A6A86;--line:#D7E6F4;--pri:#2F7FC1;--ok:#3FB37F;--star:#F5B82E;--warn:#E8853D;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14202E;--card:#1E2E42;--fg:#EAF2FB;--soft:#A9B9CE;--line:#2D4059;--pri:#6FB4EE}}
+:root[data-theme="dark"]{--bg:#14202E;--card:#1E2E42;--fg:#EAF2FB;--soft:#A9B9CE;--line:#2D4059;--pri:#6FB4EE}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:'Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif;font-size:17px;display:flex;justify-content:center}
+#app{width:100%;max-width:440px;height:100%;display:flex;flex-direction:column;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;min-height:60px}
+button{font:inherit;color:inherit;cursor:pointer}
+.ib{width:48px;height:48px;border-radius:50%;border:0;border-bottom:4px solid var(--line);background:var(--card);font-size:1.4rem}
+.pill{background:var(--card);border-radius:99px;padding:6px 14px;font-weight:700;border-bottom:4px solid var(--line)}
+main{flex:1;overflow-y:auto;padding:0 14px 90px}
+nav{display:flex;gap:8px;padding:8px 14px;background:var(--card);border-top:2px solid var(--line)}
+nav button{flex:1;border:0;border-radius:18px;background:none;padding:6px;font-size:.8rem;color:var(--soft)}
+nav button b{display:block;font-size:1.5rem}nav .on{background:var(--bg);color:var(--fg);font-weight:700}
+.sec{font-weight:700;margin:16px 4px 8px;color:var(--soft);font-size:.9rem}
+.vid{position:relative;width:100%;aspect-ratio:16/9;border-radius:22px;border:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:4rem;margin-bottom:14px;box-shadow:0 4px 0 rgba(0,0,0,.12);letter-spacing:6px}
+.vid .pl{position:absolute;inset-inline-start:12px;bottom:12px;width:50px;height:50px;border-radius:50%;background:#fff;color:#D33;display:grid;place-items:center;font-size:1.4rem;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.vid .dn,.gm .dn{position:absolute;top:10px;inset-inline-end:10px;background:var(--ok);color:#fff;width:34px;height:34px;border-radius:50%;display:grid;place-items:center}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gm{position:relative;border:0;border-radius:24px;padding:14px 8px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.gm .pv{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:1.7rem;background:#ffffffaa;padding:8px;border-radius:16px}
+.gm .go{font-size:1.5rem}
+.step{display:flex;align-items:center;gap:14px;width:100%;min-height:92px;border:3px solid var(--line);border-bottom-width:7px;border-radius:26px;background:var(--card);font-size:1.35rem;font-weight:700;padding:8px 16px;margin-bottom:12px;text-align:start}.step b{font-size:2.8rem;font-weight:400}.step.dn2{background:#CFF3E1;border-color:var(--ok)}.step.nx2{animation:pu .9s infinite;border-color:var(--pri)}.step.no{animation:sh .35s}.step span{flex:1}
+.cat{position:relative;display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:30px;min-height:130px;padding:14px 18px;margin-bottom:14px;box-shadow:0 6px 0 rgba(0,0,0,.14);text-align:start}.cat .pv{font-size:3.2rem;letter-spacing:4px;flex:1}.cat .nm{font-size:1.4rem;font-weight:800;color:#22304A}.cat .pg{font-size:1.1rem;margin-top:4px}
+.over{position:absolute;inset:0;background:var(--bg);z-index:5;display:flex;flex-direction:column;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+.scene{flex:1;border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:5.5rem;letter-spacing:8px;margin:10px 0}
+.cap{font-size:1.5rem;font-weight:700;text-align:center;min-height:3.2rem}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}.dots i{width:30px;height:8px;border-radius:9px;background:var(--line)}.dots i.on{background:var(--pri)}
+.big{border:0;border-bottom:6px solid #1d5d92;background:var(--pri);color:#fff;border-radius:99px;min-height:62px;font-size:1.3rem;font-weight:700;padding:0 30px;width:100%}
+.prompt{font-size:4.5rem;text-align:center;background:var(--card);border-radius:28px;padding:18px;margin:10px 0}
+.opts{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.opt{min-height:110px;border:3px solid var(--line);border-bottom-width:7px;border-radius:26px;background:var(--card);font-size:3.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.opt small{font-size:.8rem;color:var(--soft)}
+.opt.ok{background:#CFF3E1;border-color:var(--ok)}.opt.no{animation:sh .35s;opacity:.45}.opt.hint{border-color:var(--ok);animation:pu .8s infinite}
+@keyframes sh{25%{transform:translateX(8px)}75%{transform:translateX(-8px)}}@keyframes pu{50%{transform:scale(1.07)}}
+.map{border-radius:28px;overflow:hidden;background:var(--card);box-shadow:0 4px 0 var(--line)}
+.map svg{display:block;width:100%;height:auto}
+.node{cursor:pointer}.me{animation:bob 1.6s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-8px)}}
+.card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:12px;box-shadow:0 3px 0 var(--line)}
+.bar{height:12px;border-radius:9px;background:var(--line);overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;border-radius:9px}
+.tag{display:inline-block;border-radius:99px;padding:1px 12px;font-size:.82rem;font-weight:700;color:#fff}
+.soft{color:var(--soft);font-size:.9rem}
+.seg{display:flex;gap:8px;margin:12px 0}.seg button{flex:1;border:2px solid var(--line);background:var(--card);border-radius:99px;min-height:44px}.seg .on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.up{text-align:center;padding:30px 10px}.up .t{font-size:6rem;animation:bob 1.2s infinite}
+.hold{width:130px;height:130px;border-radius:50%;border:6px solid var(--line);background:var(--card);font-size:3rem;margin:20px auto;display:grid;place-items:center;user-select:none;touch-action:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<div id="app"><header id="hd"></header><main id="mn"></main><nav id="nv"></nav></div>
+<script>
+var COL=[['#FFE3B3','#FFC27A'],['#CDEBFF','#8CCBF5'],['#D8F5DF','#92DBA9'],['#FFD9E6','#FFA9C6'],['#E6DEFF','#BBA9F5']];
+// مستويات الخريطة: أماكن حقيقية من حياة الطفل. القصص تتحكي بالصور فقط للطفل.
+var LV=[
+{n:'البيت',e:'🏠',st:[
+ {sk:'الروتين اليومي',th:'🛏️🪥🍳',fr:[['🛏️😴','أصحى الصبح'],['🪥🧼','أغسل سناني ووشي'],['🍳🥛','أفطر وأنا مبسوط']]},
+ {sk:'طلب المساعدة',th:'🧒🙋👩',fr:[['🧒📦🔒','مش عارف أفتح'],['🧒🙋','أقول: ساعديني'],['👩🤝🧒','ماما بتساعدني']]},
+ {sk:'التعبير عن المشاعر',th:'😢🗣️🤗',fr:[['🧒😢','أنا زعلان'],['🧒🗣️👩','أقول لماما'],['🤗','ماما بتحضني']]}]},
+{n:'الحضانة',e:'🏫',st:[
+ {sk:'انتظار الدور',th:'🧒🎈🧒',fr:[['🧒🎈🧒','صاحبي بيلعب'],['🧒⏳','أستنى دوري'],['🧒🎈','دلوقتي دوري']]},
+ {sk:'اللعب مع الأصحاب',th:'🧒⚽🧒',fr:[['🧒👀🧒⚽','صاحبي بيلعب كورة'],['🧒🗣️🧒','أقوله: نلعب؟'],['🧒⚽🧒','لعبنا سوا']]},
+ {sk:'الانتقال بين الأنشطة',th:'🔔🎒🍎',fr:[['🔔','الجرس رن'],['🧒🎒','أرتّب حاجتي'],['🧒🍎','وقت الأكل']]}]},
+{n:'الحديقة',e:'🌳',st:[
+ {sk:'المشاركة',th:'🧒🛝🧒',fr:[['🧒🛝','أنا بلعب على المزلقان'],['🧒🙂🧒','صاحبي عايز يلعب'],['🧒🛝🧒','بنلعب بالدور']]},
+ {sk:'فهم مشاعر الآخرين',th:'🧒😢🧸',fr:[['🧒😢🧸💔','لعبة صاحبي اتكسرت'],['🧒👀😢','أشوف وشه حزين'],['🧒🤝😊','أسأله: أساعدك؟']]},
+ {sk:'تقبّل التغيير',th:'🌧️☂️🏠',fr:[['🌧️','النهاردة مطر'],['☂️🧒','مش هنروح الحديقة'],['🧒🧩🏠','هنلعب جوه البيت']]}]}];
+var RT=[[{sk:'روتين الصبح',th:'☀️🪥👕',st:[['🛏️','أصحى'],['🪥','أغسل سناني'],['👕','ألبس هدومي']]},{sk:'روتين الأكل',th:'🧼🍽️🥛',st:[['🧼','أغسل إيدي'],['🪑','أقعد على الكرسي'],['🍽️','آكل']]},{sk:'روتين النوم',th:'🌙🧸🛌',st:[['🩳','ألبس البيجامة'],['🪥','أغسل سناني'],['🛌','أنام']]}],
+[{sk:'شنطة الحضانة',th:'🎒📒🍎',st:[['📒','أحط كتبي'],['🍎','أحط الأكل'],['🎒','أقفل الشنطة']]},{sk:'غسل الإيدين',th:'🚰🧼🧻',st:[['🚰','أفتح الميّه'],['🧼','أحط الصابون'],['🧻','أنشّف إيدي']]},{sk:'ترتيب الألعاب',th:'🧸📦✅',st:[['🧸','ألم الألعاب'],['📦','أحطها في الصندوق'],['✅','خلصت']]}],
+[{sk:'الخروج للحديقة',th:'👟🧢🚪',st:[['👟','ألبس الجزمة'],['🧢','ألبس الطاقية'],['🚪','أخرج مع ماما']]},{sk:'الاستعداد للعب',th:'🥤🧴⚽',st:[['🥤','آخد ميّه'],['🧴','أحط واقي الشمس'],['⚽','ألعب']]},{sk:'الرجوع للبيت',th:'🔔🏠🧼',st:[['🔔','وقت الرجوع'],['🏠','أروح البيت'],['🧼','أغسل إيدي']]}]];
+var FACES=['😢','😊','😨','😠','😴','🤩'];
+var GA=[['🥵','🥤','عايز أشرب'],['🥱','🛏️','عايز أنام'],['😋','🍎','عايز آكل'],['📦🔒','🙋','محتاج مساعدة'],['🤕','🩹','بيوجعني'],['🔊😣','🎧','الصوت عالي']];
+var GB=[['🧸💔','😢'],['🎁','😊'],['⛈️','😨'],['🍰✋😠','😠'],['🛌','😴'],['🥳','🤩'],['🧸💔','😢'],['🎁','😊']];
+var S={lv:0,done:{},res:{}},view='home',cur=0,gate=false,rep=0,ov=null;
+try{S=JSON.parse(localStorage.getItem('sbs')||'')||S}catch(e){}
+cur=Math.min(S.lv,2);
+function save(){try{localStorage.setItem('sbs',JSON.stringify(S))}catch(e){}}
+function $(h){var d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild}
+function shuf(a){return a.slice().sort(function(){return Math.random()-.5})}
+function stars(){var n=0;for(var k in S.done)n++;return n}
+function lvDone(l){var n=0;['r0','r1','r2','s0','s1','s2','g0','g1'].forEach(function(k){if(S.done[l+k])n++});return n}
+function clearOv(){if(ov){ov.remove();ov=null}}
+function overlay(h){clearOv();ov=$('<div class="over">'+h+'</div>');document.getElementById('app').append(ov);return ov}
+
+function head(){var hd=document.getElementById('hd');
+ hd.innerHTML=(view==='cat'?'<button class="ib" id="bk" aria-label="رجوع">➜</button>':'<span style="width:48px"></span>')+'<span class="pill">⭐ '+stars()+'</span><span style="width:48px"></span>';
+ var b=document.getElementById('bk');if(b)b.onclick=function(){view='home';draw()}}
+function nav(){var nv=document.getElementById('nv');
+ nv.innerHTML=[['home','🏠','الرئيسية'],['map','🗺️','رحلتي'],['par','👨‍👩‍👧','الأهل']].map(function(t){return '<button data-v="'+t[0]+'" class="'+((view===t[0]||(t[0]==='home'&&view==='cat'))?'on':'')+'"><b>'+t[1]+'</b>'+t[2]+'</button>'}).join('');
+ nv.querySelectorAll('button').forEach(function(b){b.onclick=function(){view=b.dataset.v;gate=false;draw()}})}
+
+function draw(){head();nav();var m=document.getElementById('mn');m.innerHTML='';m.scrollTop=0;
+ if(view==='home')homeV(m);else if(view==='cat')catV(m);else if(view==='map')mapV(m);else parV(m)}
+
+// ---------- الخريطة ----------
+function mapV(m){
+ var P=[[90,430],[270,315],[90,195],[260,80]],pts=P.map(function(p){return p.join(',')});
+ var svg='<svg viewBox="0 0 360 500" role="img" aria-label="خريطة المستويات"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ED8FF"/><stop offset=".55" stop-color="#E4F6FF"/></linearGradient></defs>'
+ +'<rect width="360" height="500" fill="url(#sk)"/><ellipse cx="60" cy="520" rx="260" ry="120" fill="#9ADB96"/><ellipse cx="330" cy="500" rx="220" ry="110" fill="#7FCB84"/><text x="40" y="60" font-size="38">☁️</text><text x="260" y="170" font-size="30">☁️</text>'
+ +'<path d="M90 430 C 300 410, 330 340, 270 315 S -10 240, 90 195 S 330 140, 260 80" fill="none" stroke="#C99A5B" stroke-width="30" stroke-linecap="round"/><path d="M90 430 C 300 410, 330 340, 270 315 S -10 240, 90 195 S 330 140, 260 80" fill="none" stroke="#FFF" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/>'
+ +'<text x="180" y="470" font-size="26">🌷🌼</text><text x="10" y="320" font-size="30">🌳</text><text x="300" y="440" font-size="30">🌳</text><text x="20" y="110" font-size="28">🏡</text>';
+ LV.forEach(function(l,i){var p=P[i],open=i<=S.lv,fin=i<S.lv;
+  svg+='<g class="node" data-i="'+i+'" tabindex="0" role="button" aria-label="'+l.n+'" transform="translate('+p[0]+','+p[1]+')"><circle r="42" fill="'+(open?'#fff':'#cfd6de')+'" stroke="'+(fin?'#3FB37F':open?'#F5B82E':'#9aa5b1')+'" stroke-width="7"/><text y="14" text-anchor="middle" font-size="42" opacity="'+(open?1:.4)+'">'+l.e+'</text>'+(open?'':'<text y="-30" x="26" font-size="24">🔒</text>')+(fin?'<text y="-28" x="28" font-size="24">✅</text>':'')+'</g>'});
+ svg+='<g transform="translate(260,80)"><circle r="42" fill="#fff" stroke="'+(S.lv>=3?'#F5B82E':'#9aa5b1')+'" stroke-width="7"/><text y="16" text-anchor="middle" font-size="44" opacity="'+(S.lv>=3?1:.4)+'">🏆</text></g>';
+ var c=P[Math.min(S.lv,3)];svg+='<g class="me" transform="translate('+(c[0]+26)+','+(c[1]-52)+')"><text font-size="46">🧒</text></g></svg>';
+ m.append($('<div class="map">'+svg+'</div>'));
+ m.querySelectorAll('.node').forEach(function(n){n.onclick=function(){var i=+n.dataset.i;if(i<=S.lv){cur=i;view='home';draw()}}});
+ m.append($('<p class="soft" style="text-align:center">دوس على المكان المفتوح عشان تلعب فيه</p>'))}
+
+// ---------- شاشة المستوى: ٣ قصص + لعبتين ----------
+function cnt(l,c){var n=c==='g'?2:3,d=0;for(var i=0;i<n;i++)if(S.done[l+c+i])d++;return [d,n]}
+function homeV(m){var l=LV[cur];
+ m.append($('<div class="sec" style="text-align:center;font-size:1.2rem">'+l.e+' '+l.n+'</div>'));
+ [['r','🗓️','الروتين','🧼🍽️🌙',COL[0]],['g','🎮','الألعاب','🙋😊',COL[3]],['s','📖','القصص','🧒⚽🧒',COL[1]]].forEach(function(x){var c=cnt(cur,x[0]);
+  var b=$('<button class="cat" style="background:linear-gradient(135deg,'+x[4][0]+','+x[4][1]+')" aria-label="'+x[2]+'"><span class="pv">'+x[3]+'</span><span><div class="nm">'+x[1]+' '+x[2]+'</div><div class="pg">'+'⭐'.repeat(c[0])+'☆'.repeat(c[1]-c[0])+'</div></span></button>');
+  b.onclick=function(){catName=x[0];view='cat';draw()};m.append(b)})}
+var catName='r';
+function catV(m){var l=LV[cur];
+ if(catName==='g'){m.append($('<div class="sec">🎮 '+'الألعاب</div>'));
+  var g=$('<div class="games"></div>');
+  [['g0','🥤🙋🎧🩹',COL[3]],['g1','😢😊😨😠',COL[4]]].forEach(function(x,i){
+   var b=$('<button class="gm" style="background:linear-gradient(135deg,'+x[2][0]+','+x[2][1]+')" aria-label="لعبة '+(i+1)+'"><div class="pv">'+x[1].match(/./gu).join('</div><div>').replace(/^/,'<div>')+'</div></div><span class="go">▶</span>'+(S.done[cur+x[0]]?'<span class="dn">✓</span>':'')+'</button>');
+   b.onclick=function(){game(i)};g.append(b)});m.append(g);return}
+ var isR=catName==='r',arr=isR?RT[cur]:l.st;
+ m.append($('<div class="sec">'+(isR?'🗓️ الروتين':'📖 القصص')+'</div>'));
+ arr.forEach(function(s,i){var key=cur+(isR?'r':'s')+i,d=S.done[key],c=COL[(cur+i+(isR?0:2))%5];
+  var v=$('<button class="vid" style="background:linear-gradient(135deg,'+c[0]+','+c[1]+')" aria-label="'+(i+1)+'">'+s.th+'<span class="pl">▶</span>'+(d?'<span class="dn">✓</span>':'')+'</button>');
+  v.onclick=function(){isR?routine(i):story(i)};m.append(v)})}
+
+function routine(i){var r=RT[cur][i],k=0;
+ function d(){var o=overlay('<div class="scene" style="flex:none;font-size:3.6rem;height:110px;background:linear-gradient(135deg,'+COL[cur%5][0]+','+COL[cur%5][1]+')">'+r.th+'</div><div style="flex:1;overflow:auto">'+r.st.map(function(x,j){return '<button class="step '+(j<k?'dn2':(j===k&&cur===0)?'nx2':'')+'" data-j="'+j+'"><b>'+x[0]+'</b><span>'+x[1]+'</span>'+(j<k?'✅':'')+'</button>'}).join('')+'</div>');
+  o.querySelectorAll('.step').forEach(function(b){b.onclick=function(){if(+b.dataset.j===k){k++;if(k===3){d();setTimeout(function(){fin(cur+'r'+i)},700)}else d()}else{b.classList.remove('no');void b.offsetWidth;b.classList.add('no')}}})}
+ d()}
+
+function story(i){var s=LV[cur].st[i],k=0,c=COL[(cur+i)%5];
+ function r(){var o=overlay('<div class="scene" style="background:linear-gradient(135deg,'+c[0]+','+c[1]+')">'+s.fr[k][0]+'</div><div class="cap">'+s.fr[k][1]+'</div><div class="dots">'+s.fr.map(function(_,j){return '<i class="'+(j<=k?'on':'')+'"></i>'}).join('')+'</div><button class="big" id="nx">'+(k<2?'التالي ◀':'خلصت ⭐')+'</button>');
+  o.querySelector('#nx').onclick=function(){if(k<2){k++;r()}else{fin(cur+'s'+i)}}}
+ r()}
+
+function game(t){var rounds=4,n=0,opts=cur+2,miss=0,hints=0,right=0,pool=shuf(t?GB:GA).slice(0,rounds),all=t?FACES:GA.map(function(x){return x[1]});
+ function r(){var q=pool[n],cor=t?q[1]:q[1];
+  var set=shuf(all.filter(function(x){return x!==cor})).slice(0,opts-1).concat([cor]);set=shuf(set);
+  var lab={};if(!t)GA.forEach(function(x){lab[x[1]]=x[2]});
+  var o=overlay('<div class="dots">'+pool.map(function(_,j){return '<i class="'+(j<=n?'on':'')+'"></i>'}).join('')+'</div><div class="prompt">'+q[0]+'</div><div class="opts" style="grid-template-columns:'+(opts>2?'1fr 1fr':'1fr 1fr')+'">'+set.map(function(x){return '<button class="opt" data-c="'+x+'">'+x+(t?'':'<small>'+lab[x]+'</small>')+'</button>'}).join('')+'</div>');
+  var wrong=0,took=false;
+  o.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){
+   if(b.dataset.c===cor){b.classList.add('ok');if(!wrong&&!took)right++;setTimeout(function(){n++;if(n<rounds)r();else{S.res[cur+'g'+t]={ok:right,of:rounds,hint:hints};fin(cur+'g'+t)}},650)}
+   else{wrong++;b.classList.add('no');if(wrong>=2&&!took){took=true;hints++;o.querySelectorAll('.opt').forEach(function(x){if(x.dataset.c===cor)x.classList.add('hint')})}}}})}
+ r()}
+
+function fin(key){S.done[key]=1;save();var all=lvDone(cur)===8,up=all&&cur===S.lv;
+ if(up){S.lv=Math.min(S.lv+1,3);save();
+  overlay('<div class="up"><div class="t">🏆</div><h2>برافو! خلّصت '+LV[cur].n+'</h2><p style="font-size:3rem;margin:6px">⭐⭐⭐</p><p class="soft">'+(cur<2?'مكان جديد اتفتح، والألعاب فيه أصعب شوية':'وصلت لآخر الخريطة')+'</p></div><button class="big" id="go">كمّل ▶</button>').querySelector('#go').onclick=function(){clearOv();view='map';draw()}}
+ else{overlay('<div class="up"><div class="t">⭐</div><h2>أحسنت!</h2></div><button class="big" id="go">تمام ▶</button>').querySelector('#go').onclick=function(){clearOv();draw()}}}
+
+// ---------- الأهل / الأخصائي ----------
+function acc(l,t){var r=S.res[l+'g'+t];return r?Math.round(r.ok/r.of*100):null}
+function verdict(a){return a===null?['لسه ما لعبش','#8a96a8','']:a>=80?['ممتاز','#3FB37F','جاهز لمستوى أصعب. شجّعه يطبّق ده في الحياة الحقيقية.']:a>=50?['كويس','#E0A020','محتاج تكرار. جرّب اللعبة تاني وساعده بإشارة بسيطة بدل ما تقوله الإجابة.']:['محتاج تدريب','#E8853D','ارجع لنفس المستوى وكرّر القصص أولًا، وبعدين اللعبة. المطلوب تدريج مش سرعة.']}
+function parV(m){
+ if(!gate){var h=$('<div style="text-align:center;padding-top:30px"><h2>منطقة الأهل والأخصائي</h2><p class="soft">اضغط مطوّلًا على الزر لمدة ثانيتين</p><button class="hold" id="h" aria-label="اضغط مطوّلًا">🔒</button></div>');
+  m.append(h);var t;var b=h.querySelector('#h');
+  function st(e){e.preventDefault();b.style.borderColor='var(--ok)';t=setTimeout(function(){gate=true;draw()},2000)}function en(){clearTimeout(t);b.style.borderColor=''}
+  b.onpointerdown=st;b.onpointerup=b.onpointerleave=b.onpointercancel=en;b.onkeydown=function(e){if(e.key==='Enter'){gate=true;draw()}};return}
+ var seg=$('<div class="seg"></div>');
+ LV.forEach(function(l,i){var b=$('<button class="'+(rep===i?'on':'')+'">'+l.e+' '+l.n+'</button>');b.onclick=function(){rep=i;draw()};seg.append(b)});
+ m.append(seg);var l=LV[rep],d=lvDone(rep);
+ m.append($('<div class="card"><b>تقرير مستوى: '+l.n+'</b><div class="bar"><i style="width:'+d*12.5+'%;background:var(--ok)"></i></div><span class="soft">أنجز '+d+' من ٨ أنشطة'+(rep>S.lv?' (لسه مقفول)':'')+'</span></div>'));
+ var gs=[['طلب المساعدة والتعبير عن الاحتياجات (PECS)','هل اختار الكارت المناسب للموقف؟'],['فهم المشاعر','هل ربط الموقف بالإحساس الصح؟']];
+ gs.forEach(function(g,t){var a=acc(rep,t),pv=rep>0?acc(rep-1,t):null,v=verdict(a),r=S.res[rep+'g'+t];
+  var tr=a!==null&&pv!==null?(a>pv?'📈 اتحسّن عن المستوى السابق ('+pv+'% ← '+a+'%)':a<pv?'📉 قلّ عن المستوى السابق ('+pv+'% ← '+a+'%) والمستوى ده أصعب، ودي حاجة متوقعة':'➡️ ثابت على نفس النتيجة'):'';
+  m.append($('<div class="card"><b>'+g[0]+'</b> <span class="tag" style="background:'+v[1]+'">'+v[0]+'</span><div class="soft">'+g[1]+'</div><div class="bar"><i style="width:'+(a||0)+'%;background:'+v[1]+'"></i></div>'+(a===null?'':'<div>الإجابات الصح من أول مرة: '+(r?r.ok:0)+' من '+(r?r.of:4)+(r&&r.hint?' | احتاج مساعدة بصرية '+r.hint+' مرة':'')+'</div>')+(tr?'<div class="soft">'+tr+'</div>':'')+(v[2]?'<p class="soft">💡 '+v[2]+'</p>':'')+'</div>'))});
+ var rr='';RT[rep].forEach(function(x,i){rr+='<div style="display:flex;justify-content:space-between;padding:4px 0"><span>'+x.sk+'</span><span>'+(S.done[rep+'r'+i]?'✅ أتمّها بالترتيب':'⏳ لسه')+'</span></div>'});
+ m.append($('<div class="card"><b>الروتين اليومي (خطوات بصرية)</b>'+rr+'<p class="soft">💡 المستوى الأول بيعلّم الخطوة الجاية بإشارة، والمستويات بعده من غير إشارة، فلو أتمّها كلها يبقى بدأ يعتمد على نفسه.</p></div>'));
+ var st='';l.st.forEach(function(s,i){st+='<div style="display:flex;justify-content:space-between;padding:4px 0"><span>'+s.sk+'</span><span>'+(S.done[rep+'s'+i]?'✅ اتفرج':'⏳ لسه')+'</span></div>'});
+ m.append($('<div class="card"><b>القصص المصوّرة (مهارات اجتماعية)</b>'+st+'<p class="soft">💡 بعد القصة، اعمل نفس الموقف في الحقيقة مرة واحدة على الأقل.</p></div>'));
+ var rs=$('<button class="big" style="background:#8a96a8;border-bottom-color:#5d6878;margin-top:8px;min-height:48px;font-size:1rem">مسح كل التقدم</button>');
+ rs.onclick=function(){if(confirm('مسح التقدم نهائيًا؟')){S={lv:0,done:{},res:{}};save();rep=0;draw()}};m.append(rs)}
+draw();
+</script></body></html>
