@@ -29,3 +29,13 @@ This project is currently under development as part of a graduation project.
 ## Team
 
 Developed collaboratively as a graduation project.
+
+## Repository Structure
+
+```text
+Grad-Project/
+├── mobile/        # Flutter application (run all Flutter commands from here)
+├── docs/          # Project documents
+├── prototypes/    # HTML prototypes used as design reference
+└── README.md
+```
