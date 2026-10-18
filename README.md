@@ -64,3 +64,8 @@ flutter run -d chrome
 ```
 
 Always run Flutter commands from inside the `mobile` folder.
+
+## Team Guide
+
+New to Git? See [docs/git-workflow-guide.md](docs/git-workflow-guide.md) for the step-by-step workflow.
+
