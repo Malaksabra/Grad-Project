@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'icon_bubble.dart';
+
 /// A large tappable card with an icon and a title, used for one activity.
 class ActivityCard extends StatelessWidget {
   const ActivityCard({
@@ -47,7 +49,7 @@ class ActivityCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _IconBubble(color: textColor, child: icon),
+                IconBubble(color: textColor, child: icon),
                 const SizedBox(height: _spacing),
                 Text(
                   title,
@@ -62,32 +64,6 @@ class ActivityCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _IconBubble extends StatelessWidget {
-  const _IconBubble({required this.color, required this.child});
-
-  final Color color;
-  final Widget child;
-
-  static const double _size = 72;
-  static const double _iconSize = 36;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _size,
-      height: _size,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
-      child: IconTheme(
-        data: IconThemeData(color: color, size: _iconSize),
-        child: child,
       ),
     );
   }
