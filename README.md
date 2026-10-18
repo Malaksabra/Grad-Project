@@ -67,8 +67,8 @@ Always run Flutter commands from inside the `mobile` folder.
 
 ## Team Guide
 
-New to Git? See [docs/git-workflow-guide.md](docs/git-workflow-guide.md) for the step-by-step workflow.
+New to Git? See [guides/git-workflow-guide.md](guides/git-workflow-guide.md) for the step-by-step workflow.
 
 
-Coding standards: [docs/coding-standards.md](docs/coding-standards.md)
+Coding standards: [guides/coding-standards.md](guides/coding-standards.md)
 
