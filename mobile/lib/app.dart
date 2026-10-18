@@ -19,9 +19,7 @@ class App extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const Scaffold(
-        body: Center(child: Text(AppConstants.appName)),
-      ),
+      home: const Scaffold(body: Center(child: Text(AppConstants.appName))),
     );
   }
 }
