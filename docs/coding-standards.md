@@ -4,33 +4,33 @@
 
 ## التسمية (Naming Conventions)
 
-- **Files & Folders:** حروف صغيرة وشرطة سفلية (`snake_case`)، زي `daily_routines` و`routine_screen.dart`.
-- **Classes:** كل كلمة تبدأ بحرف كبير (`UpperCamelCase`)، زي `RoutineScreen`.
-- **Variables, Functions & Constants:** أول كلمة تبدأ بحرف صغير، وباقي الكلمات تبدأ بحرف كبير (`lowerCamelCase`)، زي `routineSteps` و`appName`.
-- **Boolean Variables (true/false):** تبدأ بـ `is` أو `has`، زي `isCompleted`.
-- الاسم لازم يوضّح الغرض من غير اختصارات مبهمة. `routineStep` أحسن من `rs`.
+- **Files & Folders:** تُكتب بحروف صغيرة مع استخدام `underscore`، وده اسمه `snake_case`. مثال: `daily_routines` و`routine_screen.dart`.
+- **Classes:** كل كلمة تبدأ بحرف كبير، وده اسمه `UpperCamelCase`. مثال: `RoutineScreen`.
+- **Variables, Functions & Constants:** أول كلمة تبدأ بحرف صغير، وباقي الكلمات تبدأ بحرف كبير، وده اسمه `lowerCamelCase`. مثال: `routineSteps` و`appName`.
+- **Boolean Variables:** بتاخد قيمة `true` أو `false`، ويُفضّل تبدأ بـ `is` أو `has`. مثال: `isCompleted`.
+- **Descriptive Naming:** الاسم لازم يوضّح الغرض منه من غير اختصارات مبهمة. مثال: `routineStep` أفضل من `rs`.
 
 ## Clean Code
 
-- **Single Responsibility:** كل Function تعمل حاجة واحدة بس وتبقى قصيرة.
-- **Widget Decomposition:** الـ `Widget` الكبير يتقسّم لـ `Widgets` أصغر، وكل واحد في `Class` مستقل.
-- **Don't Repeat Yourself (DRY):** ممنوع تكرار الكود. لو حاجة اتكررت في أكتر من `Feature`، تروح لـ `shared/`.
-- **Magic Numbers & Strings:** ممنوع استخدام الأرقام والنصوص السحرية. الألوان تكون من `AppColors`، والخطوط من `AppFonts`، والأسماء من `AppConstants`، ومحدش يكتب لون أو خط جوه الشاشة مباشرة.
-- **Comments:** التعليقات تشرح "ليه" مش "إيه". وأي كود مش مستخدم أو متحوّل لتعليق يتمسح.
+- **Single Responsibility:** كل `Function` تعمل مهمة واحدة بس وتكون قصيرة وواضحة.
+- **Widget Decomposition:** الـ `Widget` الكبير يتقسّم إلى `Widgets` أصغر، وكل واحد ممكن يكون في `Class` مستقل.
+- **Don't Repeat Yourself (DRY):** نتجنّب تكرار الكود. لو فيه كود مشترك بين أكتر من `Feature`، نحطه في `shared/`.
+- **Magic Numbers & Strings:** نتجنّب كتابة الأرقام والنصوص الثابتة مباشرة في الكود. الألوان تكون من `AppColors`، والخطوط من `AppFonts`، والثوابت العامة من `AppConstants`. ونستخدم `Theme.of(context)` للاستفادة من إعدادات الـ `Theme` بدل ما نكتب الألوان والخطوط مباشرة داخل الشاشات.
+- **Comments:** التعليقات تشرح السبب (Why)، مش تعيد شرح الكود (What). وأي كود غير مستخدم أو متحوّل إلى تعليق يتشال.
 
 ## SOLID Principles (بشكل مبسّط)
 
-- **S — Single Responsibility Principle (SRP):** كل `Class` وكل ملف مسؤول عن حاجة واحدة. الشاشة مسؤولة عن العرض بس، والمنطق في مكان تاني.
-- **O — Open/Closed Principle (OCP):** الكود يكون مفتوح للإضافة ومقفول أمام التعديل. لما نضيف نوع جديد، زي نشاط جديد، نضيف كود جديد من غير ما نعدّل في القديم.
-- **L — Liskov Substitution Principle (LSP):** الـ `Child Class` لازم يشتغل مكان الـ `Parent Class` من غير ما يبوّظ حاجة.
-- **I — Interface Segregation Principle (ISP):** نفضّل `Interfaces` صغيرة ومحددة على `Interface` كبيرة فيها كل حاجة.
-- **D — Dependency Inversion Principle (DIP):** الشاشة متنادّيش على الـ `Data Sources` أو الـ `Services` مباشرة؛ تتعامل معاها من خلال طبقة وسيطة أو `Abstraction`.
+- **S — Single Responsibility Principle (SRP):** كل `Class` وكل ملف يكون مسؤولًا عن مهمة واحدة. الـ `Screen` مسؤولة عن العرض، والمنطق يتحط في المكان المناسب ليه.
+- **O — Open/Closed Principle (OCP):** الكود يكون قابلًا للإضافة من غير تعديلات غير ضرورية على الكود الموجود. مثلًا، نقدر نضيف نوع نشاط جديد من غير ما نغيّر أجزاء شغالة بالفعل، قدر الإمكان.
+- **L — Liskov Substitution Principle (LSP):** الـ `Child Class` لازم يقدر يحل محل الـ `Parent Class` من غير ما يغيّر السلوك المتوقع أو يسبّب مشاكل.
+- **I — Interface Segregation Principle (ISP):** نفضّل استخدام `Interfaces` صغيرة ومحددة بدل `Interface` كبيرة بتفرض على الـ `Class` وظائف مش محتاجها.
+- **D — Dependency Inversion Principle (DIP):** الـ `UI` ما تعتمدش مباشرة على تفاصيل تنفيذ الـ `Data Sources` أو الـ `Services`، لكن تتعامل معاها من خلال `Abstractions` مناسبة لما يكون ده مطلوبًا.
 
-مش مطلوب تعقيد زيادة. الأولوية للكود البسيط والواضح، وبنطبّق المبادئ دي بقدر ما بتخدم المشروع.
+مش مطلوب نطبّق المبادئ دي بشكل معقّد. الأولوية للكود البسيط والواضح، ونستخدم المبادئ بالقدر اللي يخدم المشروع.
 
 ## Before Any Pull Request (PR)
 
-من جوه فولدر `mobile`، شغّلوا الأوامر دي:
+من داخل فولدر `mobile`، شغّلوا الأوامر دي:
 
 ```bash
 dart format .
@@ -38,15 +38,13 @@ flutter analyze
 flutter test
 ```
 
-- `dart format .`: تنسيق الكود تلقائيًا.
-- `flutter analyze`: فحص الكود واكتشاف المشاكل المحتملة.
-- `flutter test`: تشغيل الاختبارات.
+- `dart format .`: تنسيق كود `Dart` تلقائيًا.
+- `flutter analyze`: فحص الكود لاكتشاف الأخطاء والمشاكل المحتملة.
+- `flutter test`: تشغيل الـ `Tests` الموجودة في المشروع.
 
 ## AI Prompt
 
-الصقوا البرومبت ده في بداية المحادثة مع أي أداة `AI` قبل ما تطلبوا منها كتابة كود:
-
-"
+حطّوا البرومبت التالي في بداية المحادثة مع أي أداة `AI` قبل طلب كتابة أو تعديل الكود.
 
 ```text
 I'm working on a Flutter (Dart) graduation project: an Arabic, right-to-left (RTL) learning app for children with autism. Follow these rules in all code you write:
@@ -66,19 +64,25 @@ Naming (Dart conventions):
 Clean code:
 - Each function does one thing and stays short.
 - Split big widgets into small widget classes, not helper methods that return widgets.
-- No duplicated code. No magic numbers or strings.
+- Avoid duplicated code and magic numbers or strings.
 - Use AppColors, AppFonts, AppConstants and Theme.of(context). Never hardcode colors or fonts in screens.
 - Comments explain why, not what. No unused or commented-out code.
 
 SOLID, kept simple:
 - One responsibility per class and file.
-- UI does not call data or services directly.
-- Extend by adding new code, not by editing working code.
+- UI does not call data sources or services directly.
+- Extend by adding new code, not by unnecessarily modifying working code.
 - Do not over-engineer: keep it as simple as the task allows.
 
 UI and language:
 - The app is RTL and Arabic. Do not hardcode left/right alignment; use start/end.
 - Child-friendly: large touch targets and clear, simple layouts.
 
+When you answer:
+- Keep changes small.
+- Briefly explain why you structured the code that way.
+- Make sure the code is valid and would pass flutter analyze.
+
+"
 When you answer: keep changes small, explain briefly why you structured it that way, and make sure the code would pass flutter analyze.
 ```
