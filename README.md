@@ -33,10 +33,13 @@ Developed collaboratively as a graduation project.
 ## Repository Structure
 
 ```text
+
 Grad-Project/
-├── mobile/        # Flutter application (run all Flutter commands from here)
-├── docs/          # Project documents
-├── prototypes/    # HTML prototypes used as design reference
+├── mobile/          # Flutter application (run all Flutter commands from here)
+├── docs/            # Project documents
+├── guides/          # Team guides: Git workflow and coding standards
+├── prototypes/      # HTML prototypes used as design reference
+├── CONTRIBUTING.md  # Team rules for branches and pull requests
 └── README.md
 ```
 ## Getting Started
