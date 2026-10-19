@@ -75,3 +75,8 @@ New to Git? See [guides/git-workflow-guide.md](guides/git-workflow-guide.md) for
 
 Coding standards: [guides/coding-standards.md](guides/coding-standards.md)
 
+
+## Credits
+
+Icons: [Noto Emoji](https://github.com/googlefonts/noto-emoji) by Google, used under its open-source license.
+
