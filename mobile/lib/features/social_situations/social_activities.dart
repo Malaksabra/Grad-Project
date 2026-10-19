@@ -1,24 +1,22 @@
-import 'package:flutter/material.dart';
-
 import 'models/social_activity.dart';
+import 'social_situations_images.dart';
 import 'social_situations_texts.dart';
 
-// Temporary Material icons until the final illustrations are ready.
 const List<SocialActivity> socialActivities = [
   SocialActivity(
     title: SocialSituationsTexts.playWithFriend,
-    icon: Icons.sports_soccer,
+    imagePath: SocialSituationsImages.playWithFriend,
   ),
   SocialActivity(
     title: SocialSituationsTexts.creativeTurns,
-    icon: Icons.palette,
+    imagePath: SocialSituationsImages.creativeTurns,
   ),
   SocialActivity(
     title: SocialSituationsTexts.share,
-    icon: Icons.volunteer_activism,
+    imagePath: SocialSituationsImages.share,
   ),
   SocialActivity(
     title: SocialSituationsTexts.understandFeelings,
-    icon: Icons.favorite,
+    imagePath: SocialSituationsImages.understandFeelings,
   ),
 ];

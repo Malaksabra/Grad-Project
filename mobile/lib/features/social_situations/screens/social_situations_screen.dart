@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../social_activities.dart';
 import '../social_situations_colors.dart';
+import '../social_situations_images.dart';
 import '../social_situations_texts.dart';
 import '../widgets/activity_card.dart';
 import '../widgets/section_progress_card.dart';
@@ -16,11 +17,14 @@ class SocialSituationsScreen extends StatelessWidget {
   static const double _screenPadding = 20;
   static const double _gap = 16;
   static const double _gridBottomPadding = 8;
-  static const double _cardAspectRatio = 1.1;
+  static const double _baseCardHeight = 170;
   static const int _columnCount = 2;
 
   @override
   Widget build(BuildContext context) {
+    // Cards grow with the user's text size, so titles are never cut off.
+    final cardHeight = MediaQuery.textScalerOf(context).scale(_baseCardHeight);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -33,24 +37,26 @@ class SocialSituationsScreen extends StatelessWidget {
                   completed: _completedActivities,
                   total: socialActivities.length,
                 ),
-                icon: const Icon(Icons.groups),
+                icon: Image.asset(SocialSituationsImages.section),
                 backgroundColor: SocialSituationsColors.background,
                 edgeColor: SocialSituationsColors.edge,
                 textColor: SocialSituationsColors.text,
               ),
               const SizedBox(height: _gap),
               Expanded(
-                child: GridView.count(
-                  crossAxisCount: _columnCount,
-                  mainAxisSpacing: _gap,
-                  crossAxisSpacing: _gap,
-                  childAspectRatio: _cardAspectRatio,
+                child: GridView(
                   padding: const EdgeInsets.only(bottom: _gridBottomPadding),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _columnCount,
+                    mainAxisSpacing: _gap,
+                    crossAxisSpacing: _gap,
+                    mainAxisExtent: cardHeight,
+                  ),
                   children: [
                     for (final activity in socialActivities)
                       ActivityCard(
                         title: activity.title,
-                        icon: Icon(activity.icon),
+                        icon: Image.asset(activity.imagePath),
                         backgroundColor: SocialSituationsColors.background,
                         edgeColor: SocialSituationsColors.edge,
                         textColor: SocialSituationsColors.text,

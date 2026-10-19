@@ -42,7 +42,7 @@ class SectionProgressCard extends StatelessWidget {
         padding: const EdgeInsets.all(_padding),
         child: Row(
           children: [
-            IconBubble(color: textColor, child: icon),
+            IconBubble(child: icon),
             const SizedBox(width: _spacing),
             Expanded(
               child: Column(
