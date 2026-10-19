@@ -16,7 +16,7 @@ class SocialSituationsScreen extends StatelessWidget {
   static const double _screenPadding = 20;
   static const double _gap = 16;
   static const double _gridBottomPadding = 8;
-  static const double _cardAspectRatio = 0.85;
+  static const double _cardAspectRatio = 1.1;
   static const int _columnCount = 2;
 
   @override
