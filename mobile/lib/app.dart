@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'app_shell.dart';
 import 'core/constants/app_constants.dart';
 import 'core/theme/app_theme.dart';
 
@@ -10,6 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
       theme: AppTheme.light,
       locale: const Locale('ar'),
@@ -19,9 +21,7 @@ class App extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const Scaffold(
-        body: Center(child: Text(AppConstants.appName)),
-      ),
+      home: const AppShell(),
     );
   }
 }

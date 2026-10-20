@@ -59,6 +59,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/images/social_situations/
+    - assets/images/navigation/
+
   fonts:
     - family: BalooBhaijaan2
       fonts:
