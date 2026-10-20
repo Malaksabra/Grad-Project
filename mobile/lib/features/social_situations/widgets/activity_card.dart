@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'icon_bubble.dart';
@@ -24,8 +26,11 @@ class ActivityCard extends StatelessWidget {
   static const double _radius = 28;
   static const double _edgeHeight = 6;
   static const double _padding = 12;
-  static const double _spacing = 8;
   static const double _titleFontSize = 18;
+  static const double _bubbleWidthRatio = 0.6;
+  static const double _bubbleHeightRatio = 0.45;
+  static const double _minBubbleSize = 56;
+  static const double _maxBubbleSize = 120;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +52,38 @@ class ActivityCard extends StatelessWidget {
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(_padding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconBubble(child: icon),
-                const SizedBox(height: _spacing),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: textColor,
-                    fontSize: _titleFontSize,
-                  ),
-                ),
-              ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconBubble(size: _bubbleSizeFor(constraints), child: icon),
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: textColor,
+                        fontSize: _titleFontSize,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// The image grows with the card, but stays within sensible limits.
+  double _bubbleSizeFor(BoxConstraints constraints) {
+    final size = math.min(
+      constraints.maxWidth * _bubbleWidthRatio,
+      constraints.maxHeight * _bubbleHeightRatio,
+    );
+    return size.clamp(_minBubbleSize, _maxBubbleSize).toDouble();
   }
 }
