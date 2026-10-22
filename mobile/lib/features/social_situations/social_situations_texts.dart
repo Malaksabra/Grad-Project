@@ -12,6 +12,11 @@ class SocialSituationsTexts {
   static const String understandFeelings =
       '\u0623\u0641\u0647\u0645 \u0645\u0634\u0627\u0639\u0631 \u063A\u064A\u0631\u064A';
 
+  static const String back = '\u0631\u062C\u0648\u0639';
+  static const String previous = '\u0627\u0644\u0633\u0627\u0628\u0642';
+  static const String next = '\u0627\u0644\u062A\u0627\u0644\u064A';
+  static const String finish = '\u062E\u0644\u0635\u0646\u0627';
+
   static String progress({required int completed, required int total}) {
     return '\u062E\u0644\u0651\u0635\u062A $completed \u0645\u0646 $total';
   }
