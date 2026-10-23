@@ -45,14 +45,12 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
   }
 
   void _nextStep() {
-    // التحقق هل لسه فيه خطوات تالية ولا دي كانت الخطوة الأخيرة
     if (currentStepIndex < widget.routine.steps.length - 1) {
       setState(() {
         currentStepIndex++;
         _startTimer();
       });
     } else {
-      // لو دي الخطوة الأخيرة ووقتها خلص، نوقف التايمر ونعرض ديالوج النجاح
       _timer?.cancel();
       showDialog(
         context: context,
@@ -69,8 +67,8 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
                 onPressed: () {
-                  Navigator.pop(context); // إغلاق الديالوج
-                  Navigator.pop(context, true); // العودة للقائمة والشاشة الرئيسية وإعطاء علامة صح
+                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 },
                 child: const Text('حسناً', style: TextStyle(color: Colors.white)),
               ),
@@ -96,7 +94,6 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
   @override
   Widget build(BuildContext context) {
     final currentStep = widget.routine.steps[currentStepIndex];
-    // تحديد الخطوة التالية لعرضها في الشاشة (لو مش الأخيرة)
     final bool isLastStep = currentStepIndex == widget.routine.steps.length - 1;
     final nextStepTitle = !isLastStep ? widget.routine.steps[currentStepIndex + 1].title : 'النشاط التالي';
 
@@ -109,6 +106,18 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        isLastStep ? 'الخطوة الأخيرة' : 'الصبح',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
+                      ),
+                    ),
+                  ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
@@ -123,18 +132,6 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
                         const Icon(Icons.star_rounded, color: Color(0xFFF5B82E), size: 24),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        isLastStep ? 'الخطوة الأخيرة' : 'الصبح',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
-                    onPressed: () => Navigator.pop(context, false),
                   ),
                 ],
               ),
@@ -179,32 +176,34 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
                       ),
                       child: Column(
                         children: [
-                          // شريط الدوائر العلوية لجميع الخطوات (بما فيها الأخيرة)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(widget.routine.steps.length, (index) {
-                              bool isActive = index == currentStepIndex;
-                              final step = widget.routine.steps[index];
-                              return Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4),
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: isActive ? const Color(0xFF1B4D2E) : Colors.transparent, width: 2),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor: Colors.white,
-                                  child: step.imagePath != null
-                                      ? Image.asset(step.imagePath!, width: 18, height: 18, errorBuilder: (_, __, ___) => Icon(widget.routine.icon, size: 14))
-                                      : Icon(step.iconData ?? widget.routine.icon, size: 14, color: const Color(0xFF4CBB7F)),
-                                ),
-                              );
-                            }),
+                          // شريط الدوائر العلوية مغلف بـ SingleChildScrollView أفقي لمنع الـ Overflow تماماً
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(widget.routine.steps.length, (index) {
+                                bool isActive = index == currentStepIndex;
+                                final step = widget.routine.steps[index];
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: isActive ? const Color(0xFF1B4D2E) : Colors.transparent, width: 2),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: Colors.white,
+                                    child: step.imagePath != null
+                                        ? Image.asset(step.imagePath!, width: 18, height: 18, errorBuilder: (_, __, ___) => Icon(widget.routine.icon, size: 14))
+                                        : Icon(step.iconData ?? widget.routine.icon, size: 14, color: const Color(0xFF4CBB7F)),
+                                  ),
+                                );
+                              }),
+                            ),
                           ),
                           const SizedBox(height: 16),
 
-                          // بطاقة عرض تفاصيل الخطوة الحالية (صورة واسم الخطوة والخطوة اللي بعدها)
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -229,7 +228,6 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
                           ),
                           const SizedBox(height: 16),
 
-                          // دائرة العد التنازلي للوقت (تعمل الآن لكل الخطوات بما فيها الأخيرة بكل إتقان)
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -263,7 +261,6 @@ class _GenericRoutineActiveScreenState extends State<GenericRoutineActiveScreen>
                           ),
                           const SizedBox(height: 20),
 
-                          // أزرار التحكم (إيقاف مؤقت، تم إنجاز الخطوة، وزيادة الوقت)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
