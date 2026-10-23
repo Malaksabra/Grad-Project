@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'features/communication/screens/communication_screen.dart';
 import 'core/navigation/app_tab.dart';
 import 'core/navigation/app_tab_bar.dart';
 import 'features/social_situations/screens/social_situations_screen.dart';
@@ -39,7 +39,7 @@ class _AppShellState extends State<AppShell> {
   Widget _pageFor(AppTab tab) {
     return switch (tab) {
       AppTab.home => SectionPlaceholder(title: tab.label),
-      AppTab.communication => SectionPlaceholder(title: tab.label),
+      AppTab.communication => const CommunicationScreen(),
       AppTab.routines => SectionPlaceholder(title: tab.label),
       AppTab.socialSituations => const SocialSituationsScreen(),
       AppTab.play => SectionPlaceholder(title: tab.label),
