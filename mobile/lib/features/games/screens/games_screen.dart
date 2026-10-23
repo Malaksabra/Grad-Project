@@ -6,6 +6,7 @@ import '../games_images.dart';
 import '../games_styles.dart';
 import '../games_texts.dart';
 import '../logic/games_settings.dart';
+import '../widgets/game_icon.dart';
 import '../widgets/games_image.dart';
 import '../widgets/thick_box.dart';
 import 'levels_screen.dart';
@@ -106,7 +107,7 @@ class _SectionHeader extends StatelessWidget {
               color: Colors.white,
               shape: BoxShape.circle,
             ),
-            child: const Text('🎮', style: TextStyle(fontSize: 33)),
+            child: const GameIcon(GamesImages.controller, size: 38),
           ),
           const SizedBox(width: 14),
           Expanded(

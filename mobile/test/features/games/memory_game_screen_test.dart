@@ -63,8 +63,8 @@ void main() {
     await tester.pumpWidget(_screen());
 
     expect(find.text(GamesTexts.messageStart), findsOneWidget);
-    expect(find.text('⏱ 2:00'), findsOneWidget);
-    expect(find.text('❓'), findsNWidgets(GameLevel.all[_levelIndex].cardCount));
+    expect(find.text('2:00'), findsOneWidget);
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(GameLevel.all[_levelIndex].cardCount));
   });
 
   testWidgets('the time does not run before the first card', (tester) async {
@@ -73,7 +73,7 @@ void main() {
 
     await tester.pump(const Duration(seconds: 10));
 
-    expect(find.text('⏱ 2:00'), findsOneWidget);
+    expect(find.text('2:00'), findsOneWidget);
   });
 
   testWidgets('the time runs after the first card', (tester) async {
@@ -85,7 +85,7 @@ void main() {
 
     await tester.pump(const Duration(seconds: 5));
 
-    expect(find.text('⏱ 1:55'), findsOneWidget);
+    expect(find.text('1:55'), findsOneWidget);
   });
 
   testWidgets('a matching pair stays open and shows the match message', (
@@ -100,10 +100,10 @@ void main() {
 
     expect(find.text(GamesTexts.messageMatch), findsOneWidget);
     // Two cards are open, so four are still closed.
-    expect(find.text('❓'), findsNWidgets(4));
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(4));
 
     await tester.pump(const Duration(seconds: 2));
-    expect(find.text('❓'), findsNWidgets(4));
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(4));
   });
 
   testWidgets('a wrong pair is turned back after a second', (tester) async {
@@ -115,10 +115,10 @@ void main() {
     await _tapCard(tester, wrong[1]);
 
     expect(find.text(GamesTexts.messageNoMatch), findsOneWidget);
-    expect(find.text('❓'), findsNWidgets(4));
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(4));
 
     await tester.pump(const Duration(seconds: 1));
-    expect(find.text('❓'), findsNWidgets(6));
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(6));
   });
 
   testWidgets('cards are locked while a wrong pair is open', (tester) async {
@@ -134,7 +134,7 @@ void main() {
     await _tapCard(tester, third);
 
     // The third tap was ignored, so only two cards are open.
-    expect(find.text('❓'), findsNWidgets(4));
+    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(4));
 
     await tester.pump(const Duration(seconds: 1));
   });
@@ -163,7 +163,7 @@ void main() {
 
     expect(find.text(GamesTexts.won), findsNothing);
     expect(find.text(GamesTexts.messageStart), findsOneWidget);
-    expect(find.text('⏱ 2:00'), findsOneWidget);
+    expect(find.text('2:00'), findsOneWidget);
   });
 
   testWidgets('when the time is up it shows the time-up panel', (tester) async {
@@ -175,7 +175,7 @@ void main() {
 
     expect(find.text(GamesTexts.timeUp), findsOneWidget);
     expect(find.text(GamesTexts.tryAgainQuestion), findsOneWidget);
-    expect(find.text('⏱ 0:00'), findsOneWidget);
+    expect(find.text('0:00'), findsOneWidget);
   });
 
   testWidgets('exit closes the page', (tester) async {

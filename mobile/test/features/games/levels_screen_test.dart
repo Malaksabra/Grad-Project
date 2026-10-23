@@ -37,13 +37,12 @@ void main() {
       expect(find.text(GamesTexts.levelTitle(i)), findsOneWidget);
       expect(
         find.text(
-          GamesTexts.levelSummary(
-            cards: level.cardCount,
-            time: '⏱ ${formatTime(level.seconds)}',
-          ),
+          '${GamesTexts.cardsCount(level.cardCount)}'
+          '${GamesTexts.summarySeparator}',
         ),
         findsOneWidget,
       );
+      expect(find.text(formatTime(level.seconds)), findsOneWidget);
     }
   });
 

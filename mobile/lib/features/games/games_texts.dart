@@ -20,10 +20,10 @@ class GamesTexts {
 
   static String levelTitle(int index) => 'المستوى ${levelNames[index]}';
 
-  // Example: "6 كروت · 2:00". The time text is built by the caller.
-  static String levelSummary({required int cards, required String time}) {
-    return '$cards كروت  ·  $time';
-  }
+  // Example: "6 كروت  ·  " and then the time, which is drawn with the timer
+  // picture.
+  static String cardsCount(int cards) => '$cards كروت';
+  static const String summarySeparator = '  ·  ';
 
   // Screen reader labels of the levels page.
   static String tryLevelLabel(int index) => 'جرّب المستوى ${levelNames[index]}';

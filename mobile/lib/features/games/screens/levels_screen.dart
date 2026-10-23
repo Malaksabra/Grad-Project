@@ -9,6 +9,7 @@ import '../widgets/games_page.dart';
 import '../widgets/games_panel.dart';
 import '../widgets/guide_row.dart';
 import '../widgets/thick_box.dart';
+import '../widgets/time_label.dart';
 
 /// The levels page. The parent can try any level, and choose the one the
 /// child will find ready.
@@ -89,6 +90,10 @@ class _LevelOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final level = GameLevel.all[index];
     final ink = selected ? GamesColors.text : GamesColors.ink;
+    final summaryStyle = GamesStyles.body(
+      size: 14.7,
+      color: selected ? GamesColors.text : GamesColors.inkSoft,
+    );
 
     return Semantics(
       button: true,
@@ -136,17 +141,20 @@ class _LevelOption extends StatelessWidget {
                             color: ink,
                           ),
                         ),
-                        Text(
-                          GamesTexts.levelSummary(
-                            cards: level.cardCount,
-                            time: '⏱ ${formatTime(level.seconds)}',
-                          ),
-                          style: GamesStyles.body(
-                            size: 14.7,
-                            color: selected
-                                ? GamesColors.text
-                                : GamesColors.inkSoft,
-                          ),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              '${GamesTexts.cardsCount(level.cardCount)}'
+                              '${GamesTexts.summarySeparator}',
+                              style: summaryStyle,
+                            ),
+                            TimeLabel(
+                              seconds: level.seconds,
+                              style: summaryStyle,
+                              iconSize: 18,
+                            ),
+                          ],
                         ),
                       ],
                     ),

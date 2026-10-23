@@ -10,11 +10,13 @@ import '../games_texts.dart';
 import '../logic/memory_game.dart';
 import '../models/game_level.dart';
 import '../widgets/game_button.dart';
+import '../widgets/game_icon.dart';
 import '../widgets/games_image.dart';
 import '../widgets/games_page.dart';
 import '../widgets/games_panel.dart';
 import '../widgets/guide_row.dart';
 import '../widgets/thick_box.dart';
+import '../widgets/time_label.dart';
 
 /// The memory game page. The rules live in [MemoryGame]. This screen only
 /// owns the two real timers, picks the texts, and draws the board.
@@ -137,12 +139,13 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
                           style: GamesStyles.display(size: 19.2),
                         ),
                       ),
-                      Text(
-                        '⏱ ${formatTime(_game.remainingSeconds)}',
+                      TimeLabel(
+                        seconds: _game.remainingSeconds,
                         style: GamesStyles.display(
                           size: 20,
                           color: GamesColors.text,
                         ),
+                        iconSize: 26,
                       ),
                     ],
                   ),
@@ -242,10 +245,11 @@ class _CardView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: SizedBox.expand(child: GamesImage(card.image)),
               )
-            : Center(
-                child: Text(
-                  '❓',
-                  style: GamesStyles.body(size: 36, weight: FontWeight.w500),
+            : const Center(
+                child: GameIcon(
+                  GamesImages.question,
+                  size: 40,
+                  key: ValueKey('card_back'),
                 ),
               ),
       ),
@@ -272,7 +276,7 @@ class _EndPanel extends StatelessWidget {
         if (won)
           const Icon(Icons.star_rounded, size: 78, color: GamesColors.star)
         else
-          const Text('⏰', style: TextStyle(fontSize: 56)),
+          const GameIcon(GamesImages.alarm, size: 64),
         Text(
           won ? GamesTexts.won : GamesTexts.timeUp,
           textAlign: TextAlign.center,
