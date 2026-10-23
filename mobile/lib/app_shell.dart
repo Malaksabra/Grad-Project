@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'features/communication/screens/communication_screen.dart';
 import 'core/navigation/app_tab.dart';
 import 'core/navigation/app_tab_bar.dart';
+import 'features/daily_routines/daily_routines_screen.dart';
+import 'features/Home/home_progress.dart';
 import 'features/Home/home_screen.dart';
 import 'features/social_situations/screens/social_situations_screen.dart';
 import 'shared/widgets/section_placeholder.dart';
@@ -39,9 +41,15 @@ class _AppShellState extends State<AppShell> {
   // Replace a placeholder with the real screen when its section is ready.
   Widget _pageFor(AppTab tab) {
     return switch (tab) {
-      AppTab.home => const HomeScreen(),
-      AppTab.communication => SectionPlaceholder(title: tab.label),
-      AppTab.routines => SectionPlaceholder(title: tab.label),
+      AppTab.home => HomeScreen(
+        onSectionTap: (section) => _selectTab(switch (section) {
+          HomeSection.communication => AppTab.communication,
+          HomeSection.dailyRoutine => AppTab.routines,
+          HomeSection.socialSituations => AppTab.socialSituations,
+        }),
+      ),
+      AppTab.communication => const CommunicationScreen(),
+      AppTab.routines => const DailyRoutinesScreen(),
       AppTab.socialSituations => const SocialSituationsScreen(),
       AppTab.play => SectionPlaceholder(title: tab.label),
     };
