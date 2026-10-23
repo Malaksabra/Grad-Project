@@ -23,6 +23,18 @@ class GenericRoutineListScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
+                  // 1. زر الرجوع أصبح على اليمين
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                  // 2. العنوان في المنتصف
+                  const Expanded(
+                    child: Center(
+                      child: Text('الصبح', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44))),
+                    ),
+                  ),
+                  // 3. النجوم أصبحت على الشمال
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
@@ -37,15 +49,6 @@ class GenericRoutineListScreen extends StatelessWidget {
                         const Icon(Icons.star_rounded, color: Color(0xFFF5B82E), size: 24),
                       ],
                     ),
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text('الصبح', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44))),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
-                    onPressed: () => Navigator.pop(context, false),
                   ),
                 ],
               ),

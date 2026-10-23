@@ -3,10 +3,12 @@ import 'routine_model.dart';
 
 class SelfRelianceActiveScreen extends StatefulWidget {
   final RoutineData routine;
+  final int initialStars;
 
   const SelfRelianceActiveScreen({
     super.key,
     required this.routine,
+    required this.initialStars,
   });
 
   @override
@@ -15,21 +17,31 @@ class SelfRelianceActiveScreen extends StatefulWidget {
 
 class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
   int currentStepIndex = 0;
+  late int sessionStars;
+
+  @override
+  void initState() {
+    super.initState();
+    sessionStars = widget.initialStars;
+  }
 
   void _nextStep() {
+    setState(() {
+      sessionStars += 5;
+    });
+
     if (currentStepIndex < widget.routine.steps.length - 1) {
       setState(() {
         currentStepIndex++;
       });
     } else {
-      // عند الوصول للخطوة الأخيرة وإنهاء النشاط
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: const Text('شاطر يا بطل! 🎉', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF1B4D2E), fontWeight: FontWeight.bold)),
-          content: Text('عملت نشاط ${widget.routine.title} بنفسك وبشكل ممتاز جداً!', textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+          content: Text('عملت نشاط ${widget.routine.title} بنفسك واكتسبت نجوم جديدة!', textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
           actions: [
             Center(
               child: ElevatedButton(
@@ -39,8 +51,8 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                 ),
                 onPressed: () {
-                  Navigator.pop(context); // إغلاق الديالوج
-                  Navigator.pop(context); // الرجوع للشاشة الرئيسية للأنشطة
+                  Navigator.pop(context);
+                  Navigator.pop(context, sessionStars);
                 },
                 child: const Text('حسناً', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
@@ -65,7 +77,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
     final bool isLastStep = currentStepIndex == widget.routine.steps.length - 1;
     final bool isFirstStep = currentStepIndex == 0;
 
-    // صياغة الجملة التشجيعية بذكاء حسب مكان الخطوة (أولى، في النص، أو أيرة)
     String encouragementText;
     if (isFirstStep) {
       encouragementText = 'يلا يا بطل! أول حاجة هنعملها: ${currentStep.title}';
@@ -80,23 +91,43 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // الشريط العلوي
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  const SizedBox(width: 48),
-                  Expanded(
+                  // زر الرجوع على اليمين
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
+                    onPressed: () => Navigator.pop(context, sessionStars),
+                  ),
+                  const Expanded(
                     child: Center(
                       child: Text(
-                        widget.routine.title,
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
+                        '',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
-                    onPressed: () => Navigator.pop(context),
+                  // النجوم على الشمال
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xFFDCE8F5), width: 2),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('$sessionStars', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 6),
+                        Icon(
+                          sessionStars > 0 ? Icons.star_rounded : Icons.star_border_rounded,
+                          color: const Color(0xFFF5B82E),
+                          size: 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -108,7 +139,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // كارت الجملة التشجيعية المتغيرة بذكاء
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -141,7 +171,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // مؤشر النقاط والخطوات العلوية
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(widget.routine.steps.length, (index) {
@@ -159,7 +188,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // الكارت الرئيسي المعزز بـ صورة كبيرة وواضحة جداً للخطوة
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -182,8 +210,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey),
                           ),
                           const SizedBox(height: 16),
-
-                          // عرض الصورة الكبيرة الواضحة أو الأيقونة المعبرة
                           ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: currentStep.imagePath != null
@@ -204,8 +230,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-
-                          // اسم الخطوة بخط كبير وواضح
                           Text(
                             currentStep.title,
                             textAlign: TextAlign.center,
@@ -216,7 +240,6 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                     ),
                     const SizedBox(height: 28),
 
-                    // أزرار التنقل بين الخطوات
                     Row(
                       children: [
                         if (currentStepIndex > 0) ...[
@@ -225,12 +248,16 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 side: const BorderSide(color: Color(0xFF4CBB7F), width: 2),
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                                 backgroundColor: Colors.white,
                               ),
                               onPressed: _previousStep,
-                              child: const Text('السابقة', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B4D2E))),
+                              child: const Text(
+                                'السابقة',
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF1B4D2E)),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -240,22 +267,27 @@ class _SelfRelianceActiveScreenState extends State<SelfRelianceActiveScreen> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF1B4D2E),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                               elevation: 2,
                             ),
                             onPressed: _nextStep,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  isLastStep ? 'خلصت كله!' : 'الخطوة اللي بعدها',
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                Flexible(
+                                  child: Text(
+                                    isLastStep ? 'خلصت كله!' : 'الخطوة التالية (+5 ⭐)',
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 4),
                                 Icon(
                                   isLastStep ? Icons.star_rounded : Icons.arrow_forward_rounded,
                                   color: Colors.white,
+                                  size: 20,
                                 ),
                               ],
                             ),

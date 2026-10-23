@@ -13,7 +13,6 @@ class RoutineDetailsScreen extends StatefulWidget {
 class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  // حالات إنجاز الروتينات الستة
   bool isBedDone = false;
   bool isBathroomDone = false;
   bool isClothesDone = false;
@@ -54,6 +53,20 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
+                  // زر الرجوع أصبح على اليمين
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
+                    onPressed: () => Navigator.pop(context, totalStars),
+                  ),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'الصبح',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
+                      ),
+                    ),
+                  ),
+                  // عداد النجوم وأيقونتها أصبحا على الشمال
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
@@ -65,21 +78,13 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
                       children: [
                         Text('$totalStars', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 6),
-                        const Icon(Icons.star_rounded, color: Color(0xFFF5B82E), size: 24),
+                        Icon(
+                          totalStars > 0 ? Icons.star_rounded : Icons.star_border_rounded,
+                          color: const Color(0xFFF5B82E),
+                          size: 24,
+                        ),
                       ],
                     ),
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        'الصبح',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E2A44)),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
-                    onPressed: () => Navigator.pop(context),
                   ),
                 ],
               ),
@@ -159,7 +164,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
                           ),
                           const SizedBox(height: 16),
 
-                          // 1. أرتّب سريري
                           if (isBedDone)
                             _buildDoneItem(morningRoutinesData[0].title, morningRoutinesData[0].icon)
                           else
@@ -175,7 +179,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
                           const SizedBox(height: 6),
 
-                          // 2. الحمام
                           if (isBathroomDone)
                             _buildDoneItem(morningRoutinesData[1].title, morningRoutinesData[1].icon)
                           else if (isBedDone)
@@ -193,7 +196,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
                           const SizedBox(height: 6),
 
-                          // 3. ألبس هدومي
                           if (isClothesDone)
                             _buildDoneItem(morningRoutinesData[2].title, morningRoutinesData[2].icon)
                           else if (isBathroomDone)
@@ -211,7 +213,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
                           const SizedBox(height: 6),
 
-                          // 4. أفطر
                           if (isBreakfastDone)
                             _buildDoneItem(morningRoutinesData[3].title, morningRoutinesData[3].icon)
                           else if (isClothesDone)
@@ -229,7 +230,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
                           const SizedBox(height: 6),
 
-                          // 5. أنضف سناني
                           if (isTeethDone)
                             _buildDoneItem(morningRoutinesData[4].title, morningRoutinesData[4].icon)
                           else if (isBreakfastDone)
@@ -247,7 +247,6 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
                           const SizedBox(height: 6),
 
-                          // 6. أجهز شنطي
                           if (isBagDone)
                             _buildDoneItem(morningRoutinesData[5].title, morningRoutinesData[5].icon)
                           else if (isTeethDone)

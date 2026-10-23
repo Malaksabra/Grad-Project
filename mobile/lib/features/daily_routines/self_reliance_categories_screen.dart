@@ -2,29 +2,45 @@ import 'package:flutter/material.dart';
 import 'routine_model.dart';
 import 'self_reliance_active_screen.dart';
 
-class SelfRelianceCategoriesScreen extends StatelessWidget {
-  const SelfRelianceCategoriesScreen({super.key});
+class SelfRelianceCategoriesScreen extends StatefulWidget {
+  final int currentStars;
 
-  // الألوان الأساسية المطابقة للتصميم الشيك
-  static const Color mintContainerColor = Color(0xFFE3F6E8); // لون الكارد الأم المينت
-  static const Color mintBorderColor = Color(0xFF4CBB7F);    // لون الإطار الأخضر
-  static const Color darkTextColor = Color(0xFF1B4D2E);       // لون النصوص الداكنة
+  const SelfRelianceCategoriesScreen({
+    super.key,
+    required this.currentStars,
+  });
 
-  // دالة لاختيار الصورة الأوضح والأكثر واقعية لكل نشاط في الكروت الرئيسية
+  @override
+  State<SelfRelianceCategoriesScreen> createState() => _SelfRelianceCategoriesScreenState();
+}
+
+class _SelfRelianceCategoriesScreenState extends State<SelfRelianceCategoriesScreen> {
+  late int stars;
+
+  @override
+  void initState() {
+    super.initState();
+    stars = widget.currentStars;
+  }
+
+  static const Color mintContainerColor = Color(0xFFE3F6E8);
+  static const Color mintBorderColor = Color(0xFF4CBB7F);
+  static const Color darkTextColor = Color(0xFF1B4D2E);
+
   String? getBestRoutineImage(String routineId) {
     switch (routineId) {
       case 'bed':
-        return 'assets/images/daily_routines/image6.png'; // ترتيب السرير
+        return 'assets/images/daily_routines/image6.png';
       case 'bathroom':
-        return 'assets/images/daily_routines/image9.png'; // قاعد على التواليت (واقعي ومعبر)
+        return 'assets/images/daily_routines/image9.png';
       case 'clothes':
-        return 'assets/images/daily_routines/image14.png'; // اختيار الملابس
+        return 'assets/images/daily_routines/image14.png';
       case 'breakfast':
-        return 'assets/images/daily_routines/image21.png'; // الأكل قدامه وبيفطر (واقعي ومعبر)
+        return 'assets/images/daily_routines/image21.png';
       case 'teeth':
-        return 'assets/images/daily_routines/image32.png'; // تنظيف الأسنان
+        return 'assets/images/daily_routines/image32.png';
       case 'bag':
-        return 'assets/images/daily_routines/image38.png'; // تجهيز الشنطة
+        return 'assets/images/daily_routines/image38.png';
       default:
         return null;
     }
@@ -33,29 +49,18 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // الخلفية البيضاء الشيك
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            // الشريط العلوي (العنوان والنجوم وزر الرجوع)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: const Color(0xFFDCE8F5), width: 2),
-                    ),
-                    child: const Row(
-                      children: [
-                        Text('0', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(width: 6),
-                        Icon(Icons.star_border_rounded, color: Color(0xFFF5B82E), size: 24),
-                      ],
-                    ),
+                  // زر الرجوع على اليمين
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
+                    onPressed: () => Navigator.pop(context, stars),
                   ),
                   const Expanded(
                     child: Center(
@@ -69,9 +74,25 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1E2A44)),
-                    onPressed: () => Navigator.pop(context),
+                  // النجوم على الشمال
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: const Color(0xFFDCE8F5), width: 2),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('$stars', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 6),
+                        Icon(
+                          stars > 0 ? Icons.star_rounded : Icons.star_border_rounded,
+                          color: const Color(0xFFF5B82E),
+                          size: 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -83,7 +104,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    // كارت توجيه الدب المريح
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -127,7 +147,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // الكارد الأم المينت جرين الذي يضم شبكة الكروت البيضاء
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -149,7 +168,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // شبكة الكروت البيضاء الصغيرة
                           GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -162,21 +180,29 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                             itemCount: morningRoutinesData.length,
                             itemBuilder: (context, index) {
                               final routine = morningRoutinesData[index];
-                              // استدعاء الصورة الواقعية المخصصة لكل نشاط
                               final String? cardImage = getBestRoutineImage(routine.id);
 
                               return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
+                                onTap: () async {
+                                  final updatedStars = await Navigator.push<int>(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => SelfRelianceActiveScreen(routine: routine),
+                                      builder: (_) => SelfRelianceActiveScreen(
+                                        routine: routine,
+                                        initialStars: stars,
+                                      ),
                                     ),
                                   );
+
+                                  if (updatedStars != null) {
+                                    setState(() {
+                                      stars = updatedStars;
+                                    });
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white, // الكارد الصغير باللون الأبيض
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(22),
                                     border: Border.all(color: const Color(0xFFD0E8D7), width: 1.5),
                                     boxShadow: [
@@ -192,7 +218,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      // عرض الصورة الواقعية المعبرة بحجم ممتاز داخل الكارد
                                       Expanded(
                                         child: cardImage != null
                                             ? Image.asset(
@@ -211,7 +236,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      // اسم النشاط
                                       Text(
                                         routine.title,
                                         textAlign: TextAlign.center,
@@ -222,7 +246,6 @@ class SelfRelianceCategoriesScreen extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(height: 4),
-                                      // عدد الخطوات فقط
                                       Text(
                                         '${routine.steps.length} خطوات',
                                         style: const TextStyle(

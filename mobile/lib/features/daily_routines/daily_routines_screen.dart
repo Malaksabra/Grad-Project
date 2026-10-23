@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'routine_details_screen.dart'; // استيراد صفحة تفاصيل الروتين
 import 'self_reliance_categories_screen.dart'; // استيراد صفحة أنشطة أعتمد على نفسي
 
-class DailyRoutinesScreen extends StatelessWidget {
+class DailyRoutinesScreen extends StatefulWidget {
   const DailyRoutinesScreen({super.key});
+
+  @override
+  State<DailyRoutinesScreen> createState() => _DailyRoutinesScreenState();
+}
+
+class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
+  // متغير لتخزين وتراكم عدد النجوم في التطبيق وتحديثها فورياً
+  int totalStars = 0;
 
   // الألوان الأساسية
   static const Color cardColor = Color(0xFFE3F6E8);
@@ -17,7 +25,8 @@ class DailyRoutinesScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const _TopBar(stars: 0),
+            // تمرير إجمالي النجوم للشريط العلوي مع عكس الأيقونة لتكون صفراء ممتلئة عند وجود نجوم
+            _TopBar(stars: totalStars),
             const Divider(height: 1),
             Expanded(
               child: SingleChildScrollView(
@@ -31,34 +40,44 @@ class DailyRoutinesScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // الكارت الأول: الروتين اليومي (ينقل لصفحة تفاصيل الروتين)
+                          // الكارت الأول: الروتين اليومي (ينقل لصفحة تفاصيل الروتين ويستقبل النجوم)
                           Expanded(
                             child: _RoutineCard(
                               title: 'الروتين اليومي',
                               imagePath: 'assets/images/daily_routines/image3.png',
-                              onTap: () {
-                                Navigator.push(
+                              onTap: () async {
+                                final updatedStars = await Navigator.push<int>(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => const RoutineDetailsScreen(),
                                   ),
                                 );
+                                if (updatedStars != null) {
+                                  setState(() {
+                                    totalStars = updatedStars;
+                                  });
+                                }
                               },
                             ),
                           ),
                           const SizedBox(width: 16),
-                          // الكارت الثاني: الاعتماد على النفس (ينقل لصفحة اختيار الأنشطة الحرة)
+                          // الكارت الثاني: الاعتماد على النفس (ينقل لصفحة الأنشطة ويستقبل النجوم)
                           Expanded(
                             child: _RoutineCard(
                               title: 'الاعتماد على النفس',
                               imagePath: 'assets/images/daily_routines/image4.jpg',
-                              onTap: () {
-                                Navigator.push(
+                              onTap: () async {
+                                final updatedStars = await Navigator.push<int>(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SelfRelianceCategoriesScreen(),
+                                    builder: (context) => SelfRelianceCategoriesScreen(currentStars: totalStars),
                                   ),
                                 );
+                                if (updatedStars != null) {
+                                  setState(() {
+                                    totalStars = updatedStars;
+                                  });
+                                }
                               },
                             ),
                           ),
@@ -101,8 +120,12 @@ class _TopBar extends StatelessWidget {
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 6),
-                const Icon(Icons.star_border_rounded,
-                    color: Color(0xFFF5B82E), size: 24),
+                // النجمة تصبح صفراء ممتلئة طالما عدد النجوم أكبر من الصفر
+                Icon(
+                  stars > 0 ? Icons.star_rounded : Icons.star_border_rounded,
+                  color: const Color(0xFFF5B82E),
+                  size: 24,
+                ),
               ],
             ),
           ),
@@ -153,7 +176,7 @@ class _HeaderCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: DailyRoutinesScreen.textColor,
+                      color: Color(0xFF1B4D2E),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -162,7 +185,7 @@ class _HeaderCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: DailyRoutinesScreen.textColor,
+                      color: Color(0xFF1B4D2E),
                     ),
                   ),
                 ],
@@ -217,7 +240,7 @@ class _RoutineCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: DailyRoutinesScreen.textColor,
+                  color: Color(0xFF1B4D2E),
                 ),
               ),
             ],
@@ -237,13 +260,13 @@ class _GreenCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(bottom: 6),
       decoration: BoxDecoration(
-        color: DailyRoutinesScreen.edgeColor,
+        color: const Color(0xFF4CBB7F),
         borderRadius: BorderRadius.circular(28),
       ),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: DailyRoutinesScreen.cardColor,
+          color: const Color(0xFFE3F6E8),
           borderRadius: BorderRadius.circular(28),
         ),
         child: child,
