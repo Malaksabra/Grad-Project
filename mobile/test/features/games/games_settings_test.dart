@@ -3,6 +3,15 @@ import 'package:grad_project/features/games/data/level_storage.dart';
 import 'package:grad_project/features/games/logic/games_settings.dart';
 import 'package:grad_project/features/games/models/game_level.dart';
 
+/// A storage that always fails, like a phone with no space left.
+class _BrokenStorage implements LevelStorage {
+  @override
+  Future<int?> read() async => throw StateError('cannot read');
+
+  @override
+  Future<void> write(int index) async => throw StateError('cannot write');
+}
+
 void main() {
   group('InMemoryLevelStorage', () {
     test('has nothing saved at first', () async {
@@ -110,6 +119,25 @@ void main() {
       await next.load();
 
       expect(next.selectedLevel, 2);
+    });
+
+    test('load keeps the first level when the storage fails', () async {
+      final settings = GamesSettings(_BrokenStorage());
+
+      await settings.load();
+
+      expect(settings.selectedLevel, 0);
+    });
+
+    test('select still changes the level when saving fails', () async {
+      final settings = GamesSettings(_BrokenStorage());
+      var calls = 0;
+      settings.addListener(() => calls++);
+
+      await settings.select(2);
+
+      expect(settings.selectedLevel, 2);
+      expect(calls, 1);
     });
   });
 }

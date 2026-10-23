@@ -38,6 +38,7 @@ dependencies:
     sdk: flutter
   flutter_tts: ^4.2.5
   audioplayers: ^6.0.0 # تم إضافة مكتبة الصوت هنا
+  shared_preferences: ^2.5.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

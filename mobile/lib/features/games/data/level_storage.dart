@@ -10,9 +10,7 @@ abstract class LevelStorage {
 }
 
 /// Keeps the level in memory only, so it is forgotten when the app closes.
-///
-/// Temporary: replace it with a version that uses shared_preferences after the
-/// team agrees to add that package.
+/// Useful in tests, where nothing should be saved on a real phone.
 class InMemoryLevelStorage implements LevelStorage {
   InMemoryLevelStorage([this._saved]);
 

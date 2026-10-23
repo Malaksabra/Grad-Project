@@ -19,7 +19,13 @@ class GamesSettings extends ChangeNotifier {
 
   /// Reads the saved choice. Keeps the first level if nothing was saved.
   Future<void> load() async {
-    final saved = await _storage.read();
+    final int? saved;
+    try {
+      saved = await _storage.read();
+    } on Object {
+      // The saved choice could not be read, so the first level stays.
+      return;
+    }
     if (saved == null) return;
     final index = saved.clamp(0, GameLevel.all.length - 1).toInt();
     if (index == _selectedLevel) return;
@@ -39,6 +45,10 @@ class GamesSettings extends ChangeNotifier {
       _selectedLevel = index;
       notifyListeners();
     }
-    await _storage.write(index);
+    try {
+      await _storage.write(index);
+    } on Object {
+      // Saving is best effort: the choice still works until the app closes.
+    }
   }
 }

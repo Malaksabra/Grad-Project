@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/level_storage.dart';
+import '../data/shared_preferences_level_storage.dart';
 import '../games_colors.dart';
 import '../games_images.dart';
 import '../games_styles.dart';
@@ -18,8 +19,7 @@ import 'memory_game_screen.dart';
 class GamesScreen extends StatefulWidget {
   const GamesScreen({super.key, this.storage});
 
-  /// Where the chosen level is saved. Defaults to a temporary storage in
-  /// memory, until the team agrees to add shared_preferences.
+  /// Where the chosen level is saved. Defaults to the phone's storage.
   final LevelStorage? storage;
 
   @override
@@ -32,7 +32,7 @@ class _GamesScreenState extends State<GamesScreen> {
   @override
   void initState() {
     super.initState();
-    _settings = GamesSettings(widget.storage ?? InMemoryLevelStorage());
+    _settings = GamesSettings(widget.storage ?? SharedPreferencesLevelStorage());
     _settings.load();
   }
 
