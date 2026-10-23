@@ -4,8 +4,8 @@ import 'core/navigation/app_tab.dart';
 import 'core/navigation/app_tab_bar.dart';
 import 'features/daily_routines/daily_routines_screen.dart';
 import 'features/Home/home_screen.dart';
+import 'features/games/screens/games_screen.dart';
 import 'features/social_situations/screens/social_situations_screen.dart';
-import 'shared/widgets/section_placeholder.dart';
 
 /// The main frame of the app: the current section page and the tab bar.
 class AppShell extends StatefulWidget {
@@ -44,7 +44,7 @@ class _AppShellState extends State<AppShell> {
       AppTab.communication => const CommunicationScreen(),
       AppTab.routines => const DailyRoutinesScreen(),
       AppTab.socialSituations => const SocialSituationsScreen(),
-      AppTab.play => SectionPlaceholder(title: tab.label),
+      AppTab.play => const GamesScreen(),
     };
   }
 }
