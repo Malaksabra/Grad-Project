@@ -36,8 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_localizations:
     sdk: flutter
+  flutter_tts: ^4.2.5
   audioplayers: ^6.0.0 # تم إضافة مكتبة الصوت هنا
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
