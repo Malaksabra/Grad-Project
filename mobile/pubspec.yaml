@@ -37,7 +37,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_tts: ^4.2.5
-
+  audioplayers: ^6.0.0 # تم إضافة مكتبة الصوت هنا
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -104,6 +104,7 @@ flutter:
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
+  #         weight: 400
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
