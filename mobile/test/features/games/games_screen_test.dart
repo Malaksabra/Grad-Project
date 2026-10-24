@@ -7,7 +7,7 @@ void main() {
   testWidgets('shows the section header and the memory cards game', (
     tester,
   ) async {
-    await tester.pumpWidget(const MaterialApp(home: GamesScreen()));
+    await tester.pumpWidget(MaterialApp(home: GamesScreen(onBack: () {})));
 
     expect(find.text(GamesTexts.sectionTitle), findsOneWidget);
     expect(find.text(GamesTexts.sectionSubtitle), findsOneWidget);
@@ -19,7 +19,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(const MaterialApp(home: GamesScreen()));
+    await tester.pumpWidget(MaterialApp(home: GamesScreen(onBack: () {})));
 
     await tester.tap(find.text(GamesTexts.memoryCardsTitle));
     await tester.pumpAndSettle();
@@ -33,7 +33,11 @@ void main() {
   testWidgets('the back button of a page returns to the one before', (
     tester,
   ) async {
-    await tester.pumpWidget(const MaterialApp(home: GamesScreen()));
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(MaterialApp(home: GamesScreen(onBack: () {})));
 
     await tester.tap(find.text(GamesTexts.memoryCardsTitle));
     await tester.pumpAndSettle();

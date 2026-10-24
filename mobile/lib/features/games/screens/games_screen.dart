@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/section_top_bar.dart';
+
 import '../data/level_storage.dart';
 import '../data/shared_preferences_level_storage.dart';
 import '../games_colors.dart';
@@ -17,7 +19,9 @@ import 'memory_game_screen.dart';
 /// It also owns the settings (the level chosen for the child), so they stay
 /// the same while the parent moves between the pages of the section.
 class GamesScreen extends StatefulWidget {
-  const GamesScreen({super.key, this.storage});
+  const GamesScreen({super.key, this.storage, required this.onBack});
+
+  final VoidCallback onBack;
 
   /// Where the chosen level is saved. Defaults to the phone's storage.
   final LevelStorage? storage;
@@ -61,6 +65,7 @@ class _GamesScreenState extends State<GamesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: SectionAppBar(onBack: widget.onBack),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),

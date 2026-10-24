@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/section_top_bar.dart';
 import '../social_activities.dart';
 import '../social_situations_colors.dart';
 import '../social_situations_images.dart';
@@ -9,7 +10,10 @@ import '../widgets/section_progress_card.dart';
 
 /// Home screen of the social situations section.
 class SocialSituationsScreen extends StatelessWidget {
-  const SocialSituationsScreen({super.key});
+  const SocialSituationsScreen({super.key, required this.onBack});
+
+  /// Goes back to the home tab.
+  final VoidCallback onBack;
 
   // Placeholder until the child's real progress is stored.
   static const int _completedActivities = 0;
@@ -24,6 +28,7 @@ class SocialSituationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: SectionAppBar(onBack: onBack),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(_screenPadding),
