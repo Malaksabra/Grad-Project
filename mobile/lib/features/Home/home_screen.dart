@@ -8,7 +8,6 @@ import 'widgets/welcome_card.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, this.onSectionTap});
 
-
   final ValueChanged<HomeSection>? onSectionTap;
 
   @override
@@ -21,17 +20,12 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: HomeStyle.appBarBackground,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        // الـ leading بيبدأ من اليمين في RTL فالنجوم هتظهر فوق يمين
-        leadingWidth: HomeStyle.starsBadgeWidth,
-        leading: Padding(
-          padding: const EdgeInsetsDirectional.only(
-            start: HomeStyle.screenPadding,
-          ),
-          child: Center(
-            child: ListenableBuilder(
-              listenable: progress,
-              builder: (context, _) => _StarsBadge(stars: progress.stars),
-            ),
+        // الـ leading بيبدأ من اليمين في RTL فالشمس هتظهر فوق يمين
+        leading: IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.light_mode_outlined,
+            color: HomeStyle.primaryText,
           ),
         ),
         title: Text(
@@ -42,15 +36,19 @@ class HomeScreen extends StatelessWidget {
             color: HomeStyle.primaryText,
           ),
         ),
+        // الـ actions بتنتهي عند الشمال في RTL فالنجوم هتظهر فوق شمال
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.light_mode_outlined,
-              color: HomeStyle.primaryText,
+          Padding(
+            padding: const EdgeInsetsDirectional.only(
+              end: HomeStyle.screenPadding,
+            ),
+            child: Center(
+              child: ListenableBuilder(
+                listenable: progress,
+                builder: (context, _) => _StarsBadge(stars: progress.stars),
+              ),
             ),
           ),
-          const SizedBox(width: HomeStyle.screenPadding / 2),
         ],
       ),
       body: ListenableBuilder(
