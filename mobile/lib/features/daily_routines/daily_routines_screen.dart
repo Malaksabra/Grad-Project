@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+
+import '../../shared/widgets/section_top_bar.dart';
+import '../Home/home_progress.dart';
 import 'routine_details_screen.dart'; // استيراد صفحة تفاصيل الروتين
 import 'self_reliance_categories_screen.dart'; // استيراد صفحة أنشطة أعتمد على نفسي
 
 class DailyRoutinesScreen extends StatefulWidget {
-  const DailyRoutinesScreen({super.key});
+  const DailyRoutinesScreen({super.key, required this.onBack});
+
+  /// بيرجّع المستخدم لتاب الرئيسية (بييجي من AppShell).
+  final VoidCallback onBack;
 
   @override
   State<DailyRoutinesScreen> createState() => _DailyRoutinesScreenState();
 }
 
 class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
-  // متغير لتخزين وتراكم عدد النجوم في التطبيق وتحديثها فورياً
-  int totalStars = 0;
-
   // الألوان الأساسية
   static const Color cardColor = Color(0xFFE3F6E8);
   static const Color edgeColor = Color(0xFF4CBB7F);
   static const Color textColor = Color(0xFF1B4D2E);
+
+  /// النجوم دلوقتي مصدرها واحد: HomeProgress، فبتظهر في كل الأقسام.
+  void _syncStars(int? updatedStars) {
+    if (updatedStars == null) return;
+    final delta = updatedStars - HomeProgress.instance.stars;
+    if (delta > 0) HomeProgress.instance.addStars(delta);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +35,8 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // تمرير إجمالي النجوم للشريط العلوي مع عكس الأيقونة لتكون صفراء ممتلئة عند وجود نجوم
-            _TopBar(stars: totalStars),
+            // شريط علوي مشترك: زر الرجوع للرئيسية + النجوم
+            SectionTopBar(onBack: widget.onBack, title: 'الروتين اليومي'),
             const Divider(height: 1),
             Expanded(
               child: SingleChildScrollView(
@@ -35,49 +45,48 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
                   children: [
                     const _HeaderCard(done: 0, total: 2),
                     const SizedBox(height: 24),
-                    // استخدام IntrinsicHeight لضمان تساوي ارتفاع الكارتين بجانب بعضهما تماماً
+                    // IntrinsicHeight لضمان تساوي ارتفاع الكارتين
                     IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // الكارت الأول: الروتين اليومي (ينقل لصفحة تفاصيل الروتين ويستقبل النجوم)
                           Expanded(
                             child: _RoutineCard(
                               title: 'الروتين اليومي',
-                              imagePath: 'assets/images/daily_routines/image3.png',
+                              imagePath:
+                                  'assets/images/daily_routines/image3.png',
                               onTap: () async {
-                                final updatedStars = await Navigator.push<int>(
+                                final updatedStars =
+                                    await Navigator.push<int>(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const RoutineDetailsScreen(),
+                                    builder: (context) =>
+                                        const RoutineDetailsScreen(),
                                   ),
                                 );
-                                if (updatedStars != null) {
-                                  setState(() {
-                                    totalStars = updatedStars;
-                                  });
-                                }
+                                _syncStars(updatedStars);
                               },
                             ),
                           ),
                           const SizedBox(width: 16),
-                          // الكارت الثاني: الاعتماد على النفس (ينقل لصفحة الأنشطة ويستقبل النجوم)
                           Expanded(
                             child: _RoutineCard(
                               title: 'الاعتماد على النفس',
-                              imagePath: 'assets/images/daily_routines/image4.jpg',
+                              imagePath:
+                                  'assets/images/daily_routines/image4.jpg',
                               onTap: () async {
-                                final updatedStars = await Navigator.push<int>(
+                                final updatedStars =
+                                    await Navigator.push<int>(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SelfRelianceCategoriesScreen(currentStars: totalStars),
+                                    builder: (context) =>
+                                        SelfRelianceCategoriesScreen(
+                                      currentStars:
+                                          HomeProgress.instance.stars,
+                                    ),
                                   ),
                                 );
-                                if (updatedStars != null) {
-                                  setState(() {
-                                    totalStars = updatedStars;
-                                  });
-                                }
+                                _syncStars(updatedStars);
                               },
                             ),
                           ),
@@ -90,59 +99,6 @@ class _DailyRoutinesScreenState extends State<DailyRoutinesScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _TopBar extends StatelessWidget {
-  final int stars;
-  const _TopBar({required this.stars});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFDCE8F5), width: 2),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  '$stars',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 6),
-                // النجمة تصبح صفراء ممتلئة طالما عدد النجوم أكبر من الصفر
-                Icon(
-                  stars > 0 ? Icons.star_rounded : Icons.star_border_rounded,
-                  color: const Color(0xFFF5B82E),
-                  size: 24,
-                ),
-              ],
-            ),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text(
-                'الروتين اليومي',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E2A44),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 70),
-        ],
       ),
     );
   }

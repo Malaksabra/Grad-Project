@@ -38,6 +38,8 @@ class _AppShellState extends State<AppShell> {
     setState(() => _selectedTab = tab);
   }
 
+  void _goHome() => _selectTab(AppTab.home);
+
   // Replace a placeholder with the real screen when its section is ready.
   Widget _pageFor(AppTab tab) {
     return switch (tab) {
@@ -48,10 +50,10 @@ class _AppShellState extends State<AppShell> {
           HomeSection.socialSituations => AppTab.socialSituations,
         }),
       ),
-      AppTab.communication => const CommunicationScreen(),
-      AppTab.routines => const DailyRoutinesScreen(),
-      AppTab.socialSituations => const SocialSituationsScreen(),
-      AppTab.play => const GamesScreen(),
+          AppTab.communication => CommunicationScreen(onBack: _goHome),
+      AppTab.routines => DailyRoutinesScreen(onBack: _goHome),
+      AppTab.socialSituations => SocialSituationsScreen(onBack: _goHome),
+      AppTab.play => GamesScreen(onBack: _goHome),
     };
   }
 }

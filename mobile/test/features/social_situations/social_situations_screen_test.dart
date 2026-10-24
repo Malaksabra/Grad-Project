@@ -16,7 +16,7 @@ void main() {
   testWidgets('shows the section title and every activity', (tester) async {
     useSmallPhone(tester);
 
-    await tester.pumpWidget(const MaterialApp(home: SocialSituationsScreen()));
+    await tester.pumpWidget(MaterialApp(home: SocialSituationsScreen(onBack: () {})));
 
     expect(find.text(SocialSituationsTexts.sectionTitle), findsOneWidget);
     expect(find.byType(ActivityCard), findsNWidgets(socialActivities.length));
@@ -29,7 +29,7 @@ void main() {
     tester.platformDispatcher.textScaleFactorTestValue = 2.0;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
-    await tester.pumpWidget(const MaterialApp(home: SocialSituationsScreen()));
+    await tester.pumpWidget(MaterialApp(home: SocialSituationsScreen(onBack: () {})));
 
     // Any layout overflow makes the test fail on its own.
     expect(tester.takeException(), isNull);

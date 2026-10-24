@@ -18,12 +18,12 @@ class SectionColors {
     text: Color(0xFF1F4E7A),
   );
   static const SectionPalette communication = SectionPalette(
-    background: Color(0xFFDDF3E4),
-    text: Color(0xFF1E5E3A),
+    background: Color(0xFFDCEBFF),
+    text: Color(0xFF1F4E7A),
   );
   static const SectionPalette routines = SectionPalette(
-    background: Color(0xFFFFE8CC),
-    text: Color(0xFF7A4A12),
+    background: Color(0xFFE3F6E8),
+    text: Color(0xFF1B4D2E),
   );
   static const SectionPalette socialSituations = SectionPalette(
     background: Color(0xFFFFE0EC),

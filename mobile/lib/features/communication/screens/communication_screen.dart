@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/widgets/section_top_bar.dart';
+
 import '../../social_situations/widgets/activity_card.dart';
 import '../../social_situations/widgets/section_progress_card.dart';
 import '../communication_colors.dart';
@@ -12,7 +14,9 @@ import 'what_i_want_screen.dart';
 
 /// Home screen of the communication section.
 class CommunicationScreen extends StatelessWidget {
-  const CommunicationScreen({super.key});
+  const CommunicationScreen({super.key, required this.onBack});
+
+  final VoidCallback onBack;
 
   // Placeholder until the child's real progress is stored.
   static const int _completedActivities = 0;
@@ -27,6 +31,7 @@ class CommunicationScreen extends StatelessWidget {
     final cardHeight = MediaQuery.textScalerOf(context).scale(_baseCardHeight);
 
     return Scaffold(
+      appBar: SectionAppBar(onBack: onBack),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(_screenPadding),
