@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../communication_colors.dart';
 import '../communication_texts.dart';
+import '../services/flutter_tts_speech_service.dart';
 import '../services/speech_service.dart';
 import '../signs_data.dart';
 import '../widgets/action_buttons.dart';
+import '../widgets/sign_character.dart';
 import '../widgets/teddy_guide.dart';
 
 // The signs page uses the blue of the communication section.
@@ -184,9 +186,9 @@ class _SignsScreenState extends State<SignsScreen> {
         _Panel(
           caption: situation.successText,
           child: _Stage(
-            senderEmoji: situation.sender,
-            senderBubble: situation.senderReaction,
-            myBubble: situation.reply.emoji,
+            sender: situation.sender,
+            senderPose: poseOf(situation.senderReaction),
+            myPose: poseOf(situation.reply.emoji),
           ),
         ),
         const SizedBox(height: _gap),
@@ -325,65 +327,54 @@ class _Panel extends StatelessWidget {
   }
 }
 
-/// Two characters side by side, each with an optional speech bubble.
-/// The sender is on the right (first in Arabic), the child on the left.
+/// Two drawn characters side by side. Each one makes its pose with its own
+/// body. The sender is on the right (first in Arabic), the child on the left.
 class _Stage extends StatelessWidget {
-  const _Stage({required this.senderEmoji, this.senderBubble, this.myBubble});
+  const _Stage({
+    required this.sender,
+    required this.senderPose,
+    required this.myPose,
+  });
 
-  final String senderEmoji;
-  final String? senderBubble;
-  final String? myBubble;
+  final String sender;
+  final SignPose senderPose;
+  final SignPose myPose;
 
   static const double _minHeight = 210;
+  static const double _characterHeight = 170;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minHeight: _minHeight),
       color: _hue.background,
-      padding: const EdgeInsets.fromLTRB(12, 20, 12, _gap),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, _gap),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _Character(senderEmoji, senderBubble)),
-          Expanded(child: _Character(SignEmojis.me, myBubble)),
-        ],
-      ),
-    );
-  }
-}
-
-class _Character extends StatelessWidget {
-  const _Character(this.emoji, this.bubble);
-
-  final String emoji;
-  final String? bubble;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // The bubble keeps its space even when empty, so nothing jumps.
-        Visibility(
-          visible: bubble != null,
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-              child: Text(bubble ?? '.', style: const TextStyle(fontSize: 24)),
+          // Scaled down on narrow screens so both characters always fit.
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SignCharacter(
+                kind: kindOfSender(sender),
+                pose: senderPose,
+                height: _characterHeight,
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(emoji, style: const TextStyle(fontSize: 60)),
-      ],
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SignCharacter(
+                kind: CharacterKind.me,
+                pose: myPose,
+                height: _characterHeight,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -472,9 +463,11 @@ class _ClipState extends State<_Clip> {
       child: Column(
         children: [
           _Stage(
-            senderEmoji: situation.sender,
-            senderBubble: _frame == _signFrame ? situation.sign : null,
-            myBubble: _frame == _thinkFrame ? SignEmojis.thinking : null,
+            sender: situation.sender,
+            senderPose: _frame == _signFrame
+                ? poseOf(situation.sign)
+                : SignPose.idle,
+            myPose: _frame == _thinkFrame ? SignPose.thinking : SignPose.idle,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(_gap, 0, _gap, _gap),
@@ -518,7 +511,7 @@ class _SignHeader extends StatelessWidget {
   // Shown next to the pictures once the child knows what the sign means.
   final String? meaning;
 
-  static const TextStyle _emojiStyle = TextStyle(fontSize: 48);
+  static const double _characterHeight = 110;
 
   @override
   Widget build(BuildContext context) {
@@ -532,9 +525,11 @@ class _SignHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(situation.sender, style: _emojiStyle),
-            const SizedBox(width: 14),
-            Text(situation.sign, style: _emojiStyle),
+            SignCharacter(
+              kind: kindOfSender(situation.sender),
+              pose: poseOf(situation.sign),
+              height: _characterHeight,
+            ),
             if (meaning != null) ...[
               const SizedBox(width: 14),
               Flexible(
