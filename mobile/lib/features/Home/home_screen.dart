@@ -4,6 +4,8 @@ import 'home_progress.dart';
 import 'home_style.dart';
 import 'widgets/section_card.dart';
 import 'widgets/welcome_card.dart';
+// استيراد شاشة الطفل بالدوائر البصرية
+import 'child_dashboard_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, this.onSectionTap});
@@ -58,6 +60,64 @@ class HomeScreen extends StatelessWidget {
           children: [
             const WelcomeCard(),
             const SizedBox(height: HomeStyle.cardSpacing),
+
+            // 🌟 كارت الانتقال لعالم الطفل (مضاف بكل هدوء وبنفس استايل التطبيق)
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChildDashboardScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE3F6E8),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFF4CBB7F), width: 2),
+                ),
+                child: const Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Color(0xFFFFE0B2),
+                      radius: 22,
+                      child: Text('👶', style: TextStyle(fontSize: 22)),
+                    ),
+                    SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'دخول لوحة طفلي البصرية 🌟',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B4D2E),
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'الدوائر البصرية والأنشطة',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF1B4D2E), size: 18),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: HomeStyle.cardSpacing),
+
             Text(
               'نبدأ بإيه؟',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(

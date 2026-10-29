@@ -7,6 +7,8 @@ import 'features/Home/home_progress.dart';
 import 'features/Home/home_screen.dart';
 import 'features/games/screens/games_screen.dart';
 import 'features/social_situations/screens/social_situations_screen.dart';
+// 1. استيراد شاشة الدوائر البصرية للطفل
+import 'features/home/child_dashboard_screen.dart';
 
 /// The main frame of the app: the current section page and the tab bar.
 class AppShell extends StatefulWidget {
@@ -40,9 +42,10 @@ class _AppShellState extends State<AppShell> {
 
   void _goHome() => _selectTab(AppTab.home);
 
-  // Replace a placeholder with the real screen when its section is ready.
+  // 2. توجيه الـ Tabs بحيث تظهر شاشة الأهلي في الرئيسية، وشاشة الطفل في تاب الألعاب أو التاب المخصصة
   Widget _pageFor(AppTab tab) {
     return switch (tab) {
+    // شاشة الأهلي الأصلية تظهر عند فتح التطبيق (التاب الرئيسية)
       AppTab.home => HomeScreen(
         onSectionTap: (section) => _selectTab(switch (section) {
           HomeSection.communication => AppTab.communication,
@@ -50,10 +53,12 @@ class _AppShellState extends State<AppShell> {
           HomeSection.socialSituations => AppTab.socialSituations,
         }),
       ),
-          AppTab.communication => CommunicationScreen(onBack: _goHome),
+      AppTab.communication => CommunicationScreen(onBack: _goHome),
       AppTab.routines => DailyRoutinesScreen(onBack: _goHome),
       AppTab.socialSituations => SocialSituationsScreen(onBack: _goHome),
-      AppTab.play => GamesScreen(onBack: _goHome),
+
+    // هنا جعلنا شاشة الطفل بالدوائر البصرية تظهر عند الضغط على تاب الألعاب (أو الـ Tab الخاص بها)
+      AppTab.play => const ChildDashboardScreen(),
     };
   }
 }
