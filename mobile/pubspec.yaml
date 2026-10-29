@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/images/social_situations/
     - assets/images/navigation/
+    - assets/stories/sharing_01/
     - assets/images/home/
     - assets/images/communication/
     - assets/images/daily_routines/
