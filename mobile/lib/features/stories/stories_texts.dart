@@ -2,6 +2,7 @@
 class StoriesTexts {
   const StoriesTexts._();
 
+  static const String sectionTitle = '\u0642\u0635\u0635';
   static const String back = '\u0631\u062C\u0648\u0639';
   static const String previous = '\u0627\u0644\u0633\u0627\u0628\u0642';
   static const String next = '\u0627\u0644\u062A\u0627\u0644\u064A';

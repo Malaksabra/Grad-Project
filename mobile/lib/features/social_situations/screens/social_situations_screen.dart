@@ -13,10 +13,13 @@ import '../models/social_activity.dart';
 
 /// Home screen of the social situations section.
 class SocialSituationsScreen extends StatelessWidget {
-  const SocialSituationsScreen({super.key, required this.onBack});
+  const SocialSituationsScreen({super.key, required this.onBack, this.title});
 
   /// Goes back to the home tab.
   final VoidCallback onBack;
+
+  /// Replaces the default section title, for example when the child opens it as stories.
+  final String? title;
 
   // Placeholder until the child's real progress is stored.
   static const int _completedActivities = 0;
@@ -38,7 +41,7 @@ class SocialSituationsScreen extends StatelessWidget {
           child: Column(
             children: [
               SectionProgressCard(
-                title: SocialSituationsTexts.sectionTitle,
+                title: title ?? SocialSituationsTexts.sectionTitle,
                 progressText: SocialSituationsTexts.progress(
                   completed: _completedActivities,
                   total: socialActivities.length,
