@@ -15,7 +15,7 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // قائمة الأنشطة والدوائر البصرية الأنيقة والمبهجة
+    // قائمة الأنشطة والدوائر البصرية للطفل (بما فيها دائرة الألعاب كشكل بصري شبه الإشارات)
     final List dashboardItems = [
       {
         'title': 'الروتين اليومي',
@@ -32,13 +32,20 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
         'screen': SelfRelianceCategoriesScreen(currentStars: totalStars),
       },
       {
+        'title': 'الألعاب ', // دائرة الألعاب المضافة كشكل بصري شبه الإشارات
+        'icon': Icons.sports_esports_rounded,
+        'color': const Color(0xFF7C3AED),
+        'gradient': [const Color(0xFFF3E8FF), const Color(0xFFDDD6FE)],
+        // بدون شاشة انتقال حالياً (شبه الإشارات)
+      },
+      {
         'title': 'أقول نفسي في إيه؟',
         'icon': Icons.restaurant_menu_rounded,
         'color': const Color(0xFFE65100),
         'gradient': [const Color(0xFFFFF3E0), const Color(0xFFFFCC80)],
       },
       {
-        'title': 'الإشارات / الاشتراط',
+        'title': 'الإشارات ',
         'icon': Icons.waving_hand_rounded,
         'color': const Color(0xFF6A1B9A),
         'gradient': [const Color(0xFFF3E5F5), const Color(0xFFE1BEE7)],
@@ -256,7 +263,7 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
                                   });
                                 }
                               }
-                                  : null,
+                                  : null, // لو مفيش شاشة زي الإشارات والألعاب حالياً، مش هتعمل أكشن
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
