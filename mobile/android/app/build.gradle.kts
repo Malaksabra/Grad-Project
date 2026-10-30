@@ -7,9 +7,16 @@ plugins {
 
 android {
     namespace = "com.example.grad_project"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
+    defaultConfig {
+        // ... existing config
+        
+        // Ensure your targetSdk also matches your compileSdk for consistency
+        targetSdk = 36
+    }
+    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

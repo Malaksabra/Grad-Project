@@ -26,8 +26,8 @@ class StoryChoiceButton extends StatelessWidget {
   static const double _edgeHeight = 6;
   static const double _minHeight = 64;
   static const double _padding = 12;
-  static const double _imageSize = 72;
-  static const double _gap = 8;
+  // The picture fills the top of the button edge to edge (width / height).
+  static const double _imageAspectRatio = 1.2;
   static const double _fontSize = 20;
   static const double _unavailableOpacity = 0.45;
 
@@ -63,26 +63,28 @@ class StoryChoiceButton extends StatelessWidget {
             onTap: state == StoryChoiceState.idle ? onPressed : null,
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: _minHeight),
-              child: Padding(
-                padding: const EdgeInsets.all(_padding),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (path != null) ...[
-                      SizedBox(
-                        width: _imageSize,
-                        height: _imageSize,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (path != null)
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(_radius),
+                      ),
+                      child: AspectRatio(
+                        aspectRatio: _imageAspectRatio,
                         child: Image.asset(
                           path,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(Icons.image_not_supported_outlined),
                         ),
                       ),
-                      const SizedBox(height: _gap),
-                    ],
-                    Text(
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(_padding),
+                    child: Text(
                       label,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -90,8 +92,8 @@ class StoryChoiceButton extends StatelessWidget {
                         fontSize: _fontSize,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

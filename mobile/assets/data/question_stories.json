@@ -15,7 +15,7 @@
           "choices": [
             { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": true },
             { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
-            { "label": "نعسان", "image": null, "correct": false }
+            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
           ],
           "storyLine": "أنا معايا ألوان كتير، وصاحبي {friend} معاه ولا لون، وهو زعلان."
         },
@@ -35,7 +35,7 @@
           "choices": [
             { "label": "فرحانين", "image": "assets/emotions/happy.jpeg", "correct": true },
             { "label": "زعلانين", "image": "assets/emotions/sad.jpeg", "correct": false },
-            { "label": "متضايقين", "image": "assets/emotions/angry.jpeg", "correct": false }
+            { "label": "غضبانين", "image": "assets/emotions/angry.jpeg", "correct": false }
           ],
           "storyLine": "لما شاركت، أنا وصاحبي فرحنا سوا."
         }
@@ -62,7 +62,7 @@
           "choices": [
             { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": true },
             { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
-            { "label": "نعسان", "image": null, "correct": false }
+            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
           ],
           "storyLine": "{friend} زعلان، وشه حزين وبيعيّط."
         },
@@ -74,7 +74,7 @@
             { "label": "أضحك عليه", "image": null, "correct": false },
             { "label": "أمشي", "image": null, "correct": false }
           ],
-          "storyLine": "أنا بصيت على {friend} وسألته بلطف: مالك؟"
+          "storyLine": "أنا بصيت على {friend} وسألته بلطف: مالك؟ وقلت له: أنا معاك."
         },
         {
           "image": "assets/stories/feelings/f4.jpeg",
@@ -85,35 +85,6 @@
             { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
           ],
           "storyLine": "{friend} حس بتحسن، وأنا كمان فرحان."
-        }
-      ],
-      "practice": [
-        {
-          "image": "assets/stories/feelings/q2.jpeg",
-          "question": "{friend} حاسس بإيه؟",
-          "choices": [
-            { "label": "مبسوط", "image": "assets/emotions/happy.jpeg", "correct": true },
-            { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": false },
-            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
-          ]
-        },
-        {
-          "image": "assets/stories/feelings/q3.jpeg",
-          "question": "أنا حاسس بإيه؟",
-          "choices": [
-            { "label": "متضايق", "image": "assets/emotions/angry.jpeg", "correct": true },
-            { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
-            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
-          ]
-        },
-        {
-          "image": "assets/stories/feelings/q4.jpeg",
-          "question": "أنا حاسس بإيه؟",
-          "choices": [
-            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": true },
-            { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
-            { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": false }
-          ]
         }
       ]
     },
