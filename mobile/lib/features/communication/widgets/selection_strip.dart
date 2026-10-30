@@ -4,8 +4,8 @@ import '../communication_colors.dart';
 import '../communication_models.dart';
 import '../communication_texts.dart';
 
-/// Shows the sentence being built: words before + the picked card +
-/// words after + "please". Each category decides which parts it uses.
+/// Shows the sentence being built: the words before the card, the picked
+/// card, and the "please" toggle (only when "please" makes sense).
 class SelectionStrip extends StatelessWidget {
   const SelectionStrip({
     super.key,
@@ -29,25 +29,24 @@ class SelectionStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final slotHeight = MediaQuery.textScalerOf(context).scale(_baseSlotHeight);
-    final textStyle = Theme.of(
-      context,
-    ).textTheme.titleLarge?.copyWith(color: CommunicationColors.text);
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(_radius),
-        border: Border.all(
-          color: CommunicationColors.edge,
-          width: _borderWidth,
-        ),
+        border: Border.all(color: CommunicationColors.edge, width: _borderWidth),
       ),
       child: Padding(
         padding: const EdgeInsets.all(_padding),
         child: Row(
           children: [
             if (category.lead.isNotEmpty) ...[
-              Text(category.lead, style: textStyle),
+              Text(
+                category.lead,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(color: CommunicationColors.text),
+              ),
               const SizedBox(width: _gap),
             ],
             Expanded(
@@ -55,7 +54,12 @@ class SelectionStrip extends StatelessWidget {
             ),
             if (category.tail.isNotEmpty) ...[
               const SizedBox(width: _gap),
-              Text(category.tail, style: textStyle),
+              Text(
+                category.tail,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: CommunicationColors.text),
+              ),
             ],
             if (category.canSayPlease) ...[
               const SizedBox(width: _gap),

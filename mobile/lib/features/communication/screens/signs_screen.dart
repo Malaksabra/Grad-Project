@@ -1,10 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../communication_colors.dart';
 import '../communication_texts.dart';
+import '../services/flutter_tts_speech_service.dart';
 import '../services/speech_service.dart';
 import '../signs_data.dart';
 import '../widgets/action_buttons.dart';
+import '../widgets/sign_character.dart';
 import '../widgets/teddy_guide.dart';
 
 // The signs page uses the blue of the communication section.
@@ -13,6 +17,8 @@ const double _gap = 16;
 const double _panelRadius = 26;
 const double _borderWidth = 2;
 
+/// Understand a sign and answer it, in one flow: watch the clip, say what
+/// the sign means, pick the sign to answer with, then see what happens.
 class SignsScreen extends StatefulWidget {
   const SignsScreen({super.key});
 
@@ -44,6 +50,7 @@ class _SignsScreenState extends State<SignsScreen> {
   void _goTo(_Step step) => setState(() => _step = step);
 
   void _onClipFinished() {
+    // Replaying the clip later must not send the child back a step.
     if (_step == _Step.watch) _goTo(_Step.meaning);
   }
 
@@ -130,6 +137,7 @@ class _SignsScreenState extends State<SignsScreen> {
         const SizedBox(height: 8),
         _StepChips(current: _step.index),
         const SizedBox(height: _gap),
+        // The key restarts the clip for every new situation.
         _Clip(
           key: ValueKey(_index),
           situation: _situation,
@@ -178,9 +186,9 @@ class _SignsScreenState extends State<SignsScreen> {
         _Panel(
           caption: situation.successText,
           child: _Stage(
-            senderEmoji: situation.sender,
-            senderBubble: situation.senderReaction,
-            myBubble: situation.reply.emoji,
+            sender: situation.sender,
+            senderPose: poseOf(situation.senderReaction),
+            myPose: poseOf(situation.reply.emoji),
           ),
         ),
         const SizedBox(height: _gap),
@@ -223,9 +231,11 @@ class _SignsScreenState extends State<SignsScreen> {
   }
 }
 
+/// The three small steps above the clip: watch, understand, reply.
 class _StepChips extends StatelessWidget {
   const _StepChips({required this.current});
 
+  // 0 = watch, 1 = understand, 2 = reply, 3 = all done.
   final int current;
 
   static const List<String> _labels = [
@@ -265,8 +275,6 @@ class _StepChips extends StatelessWidget {
         child: Text(
           '${i + 1} ${_labels[i]}',
           textAlign: TextAlign.center,
-          maxLines: 1, // FIX: Prevents vertical expansion
-          overflow: TextOverflow.ellipsis, // FIX: Prevents horizontal overflow
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: isDone ? Colors.white : _hue.text,
             fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w500,
@@ -277,6 +285,7 @@ class _StepChips extends StatelessWidget {
   }
 }
 
+/// A white rounded box with a blue edge and an optional caption.
 class _Panel extends StatelessWidget {
   const _Panel({required this.child, this.caption});
 
@@ -318,71 +327,60 @@ class _Panel extends StatelessWidget {
   }
 }
 
+/// Two drawn characters side by side. Each one makes its pose with its own
+/// body. The sender is on the right (first in Arabic), the child on the left.
 class _Stage extends StatelessWidget {
-  const _Stage({required this.senderEmoji, this.senderBubble, this.myBubble});
+  const _Stage({
+    required this.sender,
+    required this.senderPose,
+    required this.myPose,
+  });
 
-  final String senderEmoji;
-  final String? senderBubble;
-  final String? myBubble;
+  final String sender;
+  final SignPose senderPose;
+  final SignPose myPose;
 
   static const double _minHeight = 210;
+  static const double _characterHeight = 170;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minHeight: _minHeight),
       color: _hue.background,
-      padding: const EdgeInsets.fromLTRB(12, 20, 12, _gap),
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, _gap),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(child: _Character(senderEmoji, senderBubble)),
-          Expanded(child: _Character(SignEmojis.me, myBubble)),
+          // Scaled down on narrow screens so both characters always fit.
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SignCharacter(
+                kind: kindOfSender(sender),
+                pose: senderPose,
+                height: _characterHeight,
+              ),
+            ),
+          ),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SignCharacter(
+                kind: CharacterKind.me,
+                pose: myPose,
+                height: _characterHeight,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _Character extends StatelessWidget {
-  const _Character(this.emoji, this.bubble);
-
-  final String emoji;
-  final String? bubble;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Visibility(
-          visible: bubble != null,
-          maintainSize: true,
-          maintainAnimation: true,
-          maintainState: true,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-              child: Text(
-                bubble ?? '.',
-                style: const TextStyle(fontSize: 24),
-                textAlign: TextAlign.center,
-                softWrap: true, // FIX: Allows text to wrap instead of pushing width
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(emoji, style: const TextStyle(fontSize: 60)),
-      ],
-    );
-  }
-}
-
+/// The short clip: look, sign, think. It starts by itself, can be paused
+/// and replayed, and tells the page when it reaches the end.
 class _Clip extends StatefulWidget {
   const _Clip({super.key, required this.situation, required this.onFinished});
 
@@ -465,9 +463,11 @@ class _ClipState extends State<_Clip> {
       child: Column(
         children: [
           _Stage(
-            senderEmoji: situation.sender,
-            senderBubble: _frame == _signFrame ? situation.sign : null,
-            myBubble: _frame == _thinkFrame ? SignEmojis.thinking : null,
+            sender: situation.sender,
+            senderPose: _frame == _signFrame
+                ? poseOf(situation.sign)
+                : SignPose.idle,
+            myPose: _frame == _thinkFrame ? SignPose.thinking : SignPose.idle,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(_gap, 0, _gap, _gap),
@@ -489,7 +489,7 @@ class _ClipState extends State<_Clip> {
                         color: i <= _frame
                             ? _hue.edge
                             : CommunicationColors.stage,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(99),
                       ),
                     ),
                   ),
@@ -502,21 +502,212 @@ class _ClipState extends State<_Clip> {
   }
 }
 
-// These dummy classes are to make the code compile in the editor
-// if you haven't shared ChoiceGrid or SignHeader.
-class _ChoiceGrid extends StatelessWidget {
+/// The sender and the sign, shown above a question as a reminder.
+class _SignHeader extends StatelessWidget {
+  const _SignHeader({required this.situation, this.meaning});
+
+  final SignSituation situation;
+
+  // Shown next to the pictures once the child knows what the sign means.
+  final String? meaning;
+
+  static const double _characterHeight = 110;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SignCharacter(
+              kind: kindOfSender(situation.sender),
+              pose: poseOf(situation.sign),
+              height: _characterHeight,
+            ),
+            if (meaning != null) ...[
+              const SizedBox(width: 14),
+              Flexible(
+                child: Text(
+                  CommunicationTexts.meaningIs(meaning!),
+                  style: TextStyle(color: _hue.text),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A question with picture cards. A wrong card fades and the child tries
+/// again; the right card is marked and a button appears to go on.
+class _ChoiceGrid extends StatefulWidget {
+  const _ChoiceGrid({
+    super.key,
+    required this.header,
+    required this.question,
+    required this.options,
+    required this.correctIndex,
+    required this.nextLabel,
+    required this.onNext,
+  });
+
   final Widget header;
   final String question;
-  final List options;
+  final List<SignOption> options;
   final int correctIndex;
   final String nextLabel;
   final VoidCallback onNext;
-  const _ChoiceGrid({super.key, required this.header, required this.question, required this.options, required this.correctIndex, required this.nextLabel, required this.onNext});
-  @override Widget build(BuildContext context) => const SizedBox();
+
+  @override
+  State<_ChoiceGrid> createState() => _ChoiceGridState();
 }
-class _SignHeader extends StatelessWidget {
-  final SignSituation situation;
-  final String? meaning;
-  const _SignHeader({super.key, required this.situation, this.meaning});
-  @override Widget build(BuildContext context) => const SizedBox();
+
+class _ChoiceGridState extends State<_ChoiceGrid> {
+  static const double _baseCardHeight = 112;
+  static const int _columnCount = 3;
+
+  final Set<int> _wrong = {};
+  bool _isRight = false;
+
+  void _pick(int index) {
+    if (_isRight) return;
+    setState(() {
+      if (index == widget.correctIndex) {
+        _isRight = true;
+      } else {
+        _wrong.add(index);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cardHeight = MediaQuery.textScalerOf(context).scale(_baseCardHeight);
+    final note = _isRight
+        ? CommunicationTexts.correct
+        : (_wrong.isEmpty ? '' : CommunicationTexts.tryAgain);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        widget.header,
+        const SizedBox(height: 12),
+        Text(
+          widget.question,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: _hue.text),
+        ),
+        const SizedBox(height: 12),
+        GridView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: _columnCount,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            mainAxisExtent: cardHeight,
+          ),
+          children: [
+            for (var i = 0; i < widget.options.length; i++)
+              _SignCard(
+                option: widget.options[i],
+                isRight: _isRight && i == widget.correctIndex,
+                isWrong: _wrong.contains(i),
+                onTap: () => _pick(i),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Announced to screen readers when it changes.
+        Semantics(
+          liveRegion: true,
+          child: Text(note, style: TextStyle(color: _hue.text)),
+        ),
+        if (_isRight) ...[
+          const SizedBox(height: 8),
+          PrimaryActionButton(
+            label: widget.nextLabel,
+            onPressed: widget.onNext,
+            hue: _hue,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// One tappable picture card with a solid bottom edge.
+class _SignCard extends StatelessWidget {
+  const _SignCard({
+    required this.option,
+    required this.isRight,
+    required this.isWrong,
+    required this.onTap,
+  });
+
+  final SignOption option;
+  final bool isRight;
+  final bool isWrong;
+  final VoidCallback onTap;
+
+  static const double _radius = 24;
+  static const double _edgeHeight = 5;
+  static const double _wrongOpacity = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderRadius = BorderRadius.circular(_radius);
+
+    return Opacity(
+      opacity: isWrong ? _wrongOpacity : 1,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: isRight ? _hue.background : Colors.white,
+          borderRadius: borderRadius,
+          border: Border.all(
+            color: isRight ? _hue.text : _hue.edge,
+            width: _borderWidth,
+          ),
+          // A shadow without blur gives the card its solid bottom edge.
+          boxShadow: [
+            BoxShadow(color: _hue.edge, offset: const Offset(0, _edgeHeight)),
+          ],
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: borderRadius,
+            onTap: onTap,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(option.emoji, style: const TextStyle(fontSize: 40)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    option.label,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: _hue.text),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

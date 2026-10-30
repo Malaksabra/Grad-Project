@@ -7,6 +7,7 @@ import 'features/Home/home_progress.dart';
 import 'features/Home/home_screen.dart';
 import 'features/games/screens/games_screen.dart';
 import 'features/social_situations/screens/social_situations_screen.dart';
+import 'features/home/child_dashboard_screen.dart';
 
 /// The main frame of the app: the current section page and the tab bar.
 class AppShell extends StatefulWidget {
@@ -40,7 +41,7 @@ class _AppShellState extends State<AppShell> {
 
   void _goHome() => _selectTab(AppTab.home);
 
-  // Replace a placeholder with the real screen when its section is ready.
+  // توجيه الـ Tabs مع تمرير الـ onBack المطلوب لشاشة الألعاب
   Widget _pageFor(AppTab tab) {
     return switch (tab) {
       AppTab.home => HomeScreen(
@@ -50,9 +51,11 @@ class _AppShellState extends State<AppShell> {
           HomeSection.socialSituations => AppTab.socialSituations,
         }),
       ),
-          AppTab.communication => CommunicationScreen(onBack: _goHome),
+      AppTab.communication => CommunicationScreen(onBack: _goHome),
       AppTab.routines => DailyRoutinesScreen(onBack: _goHome),
       AppTab.socialSituations => SocialSituationsScreen(onBack: _goHome),
+
+    // تمرير onBack: _goHome لشاشة الألعاب لحل المشكلة نهائياً
       AppTab.play => GamesScreen(onBack: _goHome),
     };
   }

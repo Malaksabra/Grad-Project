@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// One color family: a soft background, a strong edge, and a dark text color.
-/// The values are copied from the prototype, so the app matches it exactly.
-class CommunicationHue {
+/// A family of three colors. Every card of the communication section picks
+/// one; blue is the default. A new family is one new line here.
+enum CommunicationHue {
+  blue(
+    background: Color(0xFFE8F3FC),
+    edge: Color(0xFF8FC1EA),
+    text: Color(0xFF1E5A8C),
+  ),
+  green(
+    background: Color(0xFFE6F6EC),
+    edge: Color(0xFF6FBF8E),
+    text: Color(0xFF1F6B3F),
+  );
+
   const CommunicationHue({
     required this.background,
     required this.edge,
@@ -12,37 +23,24 @@ class CommunicationHue {
   final Color background;
   final Color edge;
   final Color text;
-
-  /// Blue: the whole communication section, including the signs page.
-  static const CommunicationHue blue = CommunicationHue(
-    background: CommunicationColors.blueBackground,
-    edge: CommunicationColors.blueEdge,
-    text: CommunicationColors.blueText,
-  );
 }
 
-// Colors of the communication section, taken from the prototype.
-// To change a color of the whole section, change it here only.
+/// Colors of the communication section. They are `const`, so they can be
+/// used inside const widgets. Background, edge and text are the blue family.
 class CommunicationColors {
   const CommunicationColors._();
 
-  // Blue (prototype: --comm, --comm-strong, --comm-ink).
-  static const Color blueBackground = Color(0xFFE2F2FE);
-  static const Color blueEdge = Color(0xFF52AEE5);
-  static const Color blueText = Color(0xFF154C73);
+  static const Color background = Color(0xFFE8F3FC);
+  static const Color edge = Color(0xFF8FC1EA);
+  static const Color text = Color(0xFF1E5A8C);
 
-  // The default of the section is blue, so older code keeps working.
-  static const Color background = blueBackground;
-  static const Color edge = blueEdge;
-  static const Color text = blueText;
+  // The stage of the signs page.
+  static const Color stage = Color(0xFFF4F9FE);
 
-  // Background of the white-ish stage that holds an activity.
-  static const Color stage = Color(0xFFF2F7FC);
-
-  // The teddy keeps its own colors so it looks the same on every page.
-  static const Color teddyEar = Color(0xFFE89C47);
-  static const Color teddyFace = Color(0xFFFFF4E6);
-  static const Color teddyCheek = Color(0xFFE873A2);
-  static const Color teddyEye = Color(0xFF22304A);
-  static const Color teddyNose = Color(0xFF703C08);
+  // The teddy.
+  static const Color teddyFace = Color(0xFFE8B98A);
+  static const Color teddyEar = Color(0xFFC98E5B);
+  static const Color teddyCheek = Color(0xFFF2A0A0);
+  static const Color teddyEye = Color(0xFF3B2A20);
+  static const Color teddyNose = Color(0xFF5A3A28);
 }
