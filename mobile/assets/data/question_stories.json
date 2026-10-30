@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "gender": "boy",
+  "defaults": { "childName": "أحمد", "friendName": "سامي" },
+  "myStory": { "title": "حكاية {child}", "button": "حكايتي" },
+  "stories": [
+    {
+      "id": "sharing",
+      "title": "أشارك",
+      "status": "ready",
+      "pages": [
+        {
+          "image": "assets/stories/sharing/p1.jpeg",
+          "question": "{friend} حاسس بإيه؟",
+          "choices": [
+            { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": true },
+            { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
+            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
+          ],
+          "storyLine": "أنا معايا ألوان كتير، وصاحبي {friend} معاه ولا لون، وهو زعلان."
+        },
+        {
+          "image": "assets/stories/sharing/p2.jpeg",
+          "question": "أنا أعمل إيه؟",
+          "choices": [
+            { "label": "أديه لون", "image": null, "correct": true },
+            { "label": "أخبّي الألوان", "image": null, "correct": false },
+            { "label": "أمشي", "image": null, "correct": false }
+          ],
+          "storyLine": "أنا ادّيت {friend} لون وقلت له: اتفضل. وهو قال لي: شكراً يا {child}."
+        },
+        {
+          "image": "assets/stories/sharing/p3.jpeg",
+          "question": "أنا و{friend} حاسين بإيه؟",
+          "choices": [
+            { "label": "فرحانين", "image": "assets/emotions/happy.jpeg", "correct": true },
+            { "label": "زعلانين", "image": "assets/emotions/sad.jpeg", "correct": false },
+            { "label": "غضبانين", "image": "assets/emotions/angry.jpeg", "correct": false }
+          ],
+          "storyLine": "لما شاركت، أنا وصاحبي فرحنا سوا."
+        }
+      ]
+    },
+    {
+      "id": "feelings",
+      "title": "أفهم مشاعر غيري",
+      "status": "ready",
+      "pages": [
+        {
+          "image": "assets/stories/feelings/f1.jpeg",
+          "question": "إيه اللي حصل للعبة {friend}؟",
+          "choices": [
+            { "label": "اتكسرت", "image": null, "correct": true },
+            { "label": "ضاعت", "image": null, "correct": false },
+            { "label": "اتغسلت", "image": null, "correct": false }
+          ],
+          "storyLine": "لعبة صاحبي {friend} اتكسرت."
+        },
+        {
+          "image": "assets/stories/feelings/f2.jpeg",
+          "question": "{friend} حاسس بإيه؟",
+          "choices": [
+            { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": true },
+            { "label": "فرحان", "image": "assets/emotions/happy.jpeg", "correct": false },
+            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
+          ],
+          "storyLine": "{friend} زعلان، وشه حزين وبيعيّط."
+        },
+        {
+          "image": "assets/stories/feelings/f3.jpeg",
+          "question": "أنا أعمل إيه؟",
+          "choices": [
+            { "label": "أسأله: مالك؟", "image": null, "correct": true },
+            { "label": "أضحك عليه", "image": null, "correct": false },
+            { "label": "أمشي", "image": null, "correct": false }
+          ],
+          "storyLine": "أنا بصيت على {friend} وسألته بلطف: مالك؟ وقلت له: أنا معاك."
+        },
+        {
+          "image": "assets/stories/feelings/f4.jpeg",
+          "question": "{friend} حاسس بإيه دلوقتي؟",
+          "choices": [
+            { "label": "مبسوط", "image": "assets/emotions/happy.jpeg", "correct": true },
+            { "label": "زعلان", "image": "assets/emotions/sad.jpeg", "correct": false },
+            { "label": "خايف", "image": "assets/emotions/scared.jpeg", "correct": false }
+          ],
+          "storyLine": "{friend} حس بتحسن، وأنا كمان فرحان."
+        }
+      ]
+    },
+    { "id": "story_3", "title": "PLACEHOLDER", "status": "placeholder", "pages": [] },
+    { "id": "story_4", "title": "PLACEHOLDER", "status": "placeholder", "pages": [] }
+  ]
+}

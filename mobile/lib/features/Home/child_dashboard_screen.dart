@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // استيراد الشاشات الفعلية
 import '../../features/daily_routines/routine_details_screen.dart';
 import '../../features/daily_routines/self_reliance_categories_screen.dart';
+import '../../features/social_situations/screens/social_situations_screen.dart';
+import '../../features/stories/stories_texts.dart';
 
 class ChildDashboardScreen extends StatefulWidget {
   const ChildDashboardScreen({super.key});
@@ -51,8 +53,12 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
         'gradient': [const Color(0xFFF3E5F5), const Color(0xFFE1BEE7)],
       },
       {
-        'title': 'المواقف الاجتماعية',
-        'icon': Icons.people_alt_rounded,
+        'title': StoriesTexts.sectionTitle,
+        'icon': Icons.menu_book_rounded,
+        'screen': SocialSituationsScreen(
+          title: StoriesTexts.sectionTitle,
+          onBack: () => Navigator.of(context).pop(),
+        ),
         'color': const Color(0xFFC2185B),
         'gradient': [const Color(0xFFFCE4EC), const Color(0xFFF8BBD0)],
       },

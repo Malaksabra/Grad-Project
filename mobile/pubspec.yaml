@@ -68,6 +68,10 @@ flutter:
     - assets/images/communication/
     - assets/images/daily_routines/
     - assets/images/games/
+    - assets/data/
+    - assets/stories/sharing/
+    - assets/stories/feelings/
+    - assets/emotions/
 
   fonts:
     - family: BalooBhaijaan2

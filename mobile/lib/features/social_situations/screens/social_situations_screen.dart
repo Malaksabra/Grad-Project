@@ -7,13 +7,19 @@ import '../social_situations_images.dart';
 import '../social_situations_texts.dart';
 import '../widgets/activity_card.dart';
 import '../widgets/section_progress_card.dart';
+import '../../stories/question_stories/question_story_ids.dart';
+import '../../stories/question_stories/question_story_launcher.dart';
+import '../models/social_activity.dart';
 
 /// Home screen of the social situations section.
 class SocialSituationsScreen extends StatelessWidget {
-  const SocialSituationsScreen({super.key, required this.onBack});
+  const SocialSituationsScreen({super.key, required this.onBack, this.title});
 
   /// Goes back to the home tab.
   final VoidCallback onBack;
+
+  /// Replaces the default section title, for example when the child opens it as stories.
+  final String? title;
 
   // Placeholder until the child's real progress is stored.
   static const int _completedActivities = 0;
@@ -35,7 +41,7 @@ class SocialSituationsScreen extends StatelessWidget {
           child: Column(
             children: [
               SectionProgressCard(
-                title: SocialSituationsTexts.sectionTitle,
+                title: title ?? SocialSituationsTexts.sectionTitle,
                 progressText: SocialSituationsTexts.progress(
                   completed: _completedActivities,
                   total: socialActivities.length,
@@ -71,8 +77,7 @@ class SocialSituationsScreen extends StatelessWidget {
                             backgroundColor: SocialSituationsColors.background,
                             edgeColor: SocialSituationsColors.edge,
                             textColor: SocialSituationsColors.text,
-                            // Navigation is added together with the activity screens.
-                            onTap: () {},
+                            onTap: () => _openActivity(context, activity),
                           ),
                       ],
                     );
@@ -102,5 +107,17 @@ class SocialSituationsScreen extends StatelessWidget {
           textScaler.scale(_maxCardHeight),
         )
         .toDouble();
+  }
+
+  /// Opens the story of a card. Cards without a story yet do nothing.
+  void _openActivity(BuildContext context, SocialActivity activity) {
+    final String? storyId = switch (activity.title) {
+      SocialSituationsTexts.share => QuestionStoryIds.sharing,
+      SocialSituationsTexts.understandFeelings => QuestionStoryIds.feelings,
+      _ => null,
+    };
+    if (storyId == null) return;
+
+    QuestionStoryLauncher().open(context, storyId);
   }
 }
