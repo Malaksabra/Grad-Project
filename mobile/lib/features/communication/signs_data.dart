@@ -23,6 +23,24 @@ class SignEmojis {
   static const String thanks = '🙏';
 }
 
+/// What a character does with its body. The drawn characters of the signs
+/// page animate these poses.
+enum SignPose { idle, wave, smile, stopHand, thumbsUp, thanks, thinking }
+
+/// The pose for a sign picture. Pictures with no motion of their own, such
+/// as "waiting", leave the character standing calmly.
+SignPose poseOf(String sign) {
+  return switch (sign) {
+    SignEmojis.wave => SignPose.wave,
+    SignEmojis.smile => SignPose.smile,
+    SignEmojis.stopHand => SignPose.stopHand,
+    SignEmojis.thumbsUp => SignPose.thumbsUp,
+    SignEmojis.thanks => SignPose.thanks,
+    SignEmojis.thinking => SignPose.thinking,
+    _ => SignPose.idle,
+  };
+}
+
 /// One picture card, for example "hello" or "wave back".
 class SignOption {
   const SignOption(this.emoji, this.label);
@@ -127,7 +145,7 @@ const List<SignSituation> signSituations = [
       SignOption('🏃', 'أجري عليها'),
     ],
     correctReply: 0,
-    senderReaction: SignEmojis.thumbsUp,
+    senderReaction: SignEmojis.smile,
     successText: 'استنيت مكانك بهدوء، وماما قالت لك: برافو!',
   ),
   SignSituation(

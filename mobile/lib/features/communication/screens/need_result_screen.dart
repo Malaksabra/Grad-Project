@@ -6,20 +6,22 @@ import '../communication_texts.dart';
 import '../services/speech_service.dart';
 import '../widgets/action_buttons.dart';
 
-/// Shown after the child says it: mama answers and the sentence can be
-/// heard again.
+/// Shown after the main button: mama answers and the sentence can be heard
+/// again.
 class NeedResultScreen extends StatelessWidget {
   const NeedResultScreen({
     super.key,
     required this.item,
     required this.sentence,
-    required this.mamaReply,
+    required this.mamaIntro,
     required this.speechService,
   });
 
   final NeedItem item;
   final String sentence;
-  final String mamaReply;
+
+  // First words of mama's answer, which depend on the category.
+  final String mamaIntro;
   final SpeechService speechService;
 
   static const double _screenPadding = 20;
@@ -63,7 +65,10 @@ class NeedResultScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(_bubblePadding),
                     child: Text(
-                      mamaReply,
+                      CommunicationTexts.mamaReply(
+                        intro: mamaIntro,
+                        sentence: sentence,
+                      ),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: CommunicationColors.text,

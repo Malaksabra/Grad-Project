@@ -4,15 +4,16 @@ import '../communication_colors.dart';
 import '../communication_data.dart';
 import '../communication_models.dart';
 import '../communication_texts.dart';
+import '../services/flutter_tts_speech_service.dart';
 import '../services/speech_service.dart';
 import '../widgets/action_buttons.dart';
 import '../widgets/need_card_grid.dart';
 import '../widgets/selection_strip.dart';
 import '../widgets/teddy_guide.dart';
 import 'need_result_screen.dart';
+import 'pain_screens.dart';
 
-/// The page where the child says what they want, asks for help,
-/// or tells what hurts. Each one is a category of cards.
+/// The page where the child says what they want: needs, help and pain.
 class WhatIWantScreen extends StatefulWidget {
   const WhatIWantScreen({super.key});
 
@@ -33,6 +34,9 @@ class _WhatIWantScreenState extends State<WhatIWantScreen> {
 
   NeedCategory get _category => needCategories[_categoryIndex];
 
+  /// The pain category has its own flow with body areas.
+  bool get _isPainCategory => _category.title == CommunicationTexts.tellPain;
+
   @override
   void dispose() {
     _speech.stop();
@@ -44,29 +48,24 @@ class _WhatIWantScreenState extends State<WhatIWantScreen> {
   }
 
   void _selectCategory(int index) {
-    if (index == _categoryIndex) return;
     setState(() {
       _categoryIndex = index;
-      // A card from another category must not stay picked.
       _selectedItem = null;
       _isPolite = false;
     });
   }
 
   /// Opens the result page, then clears the choice for the next request.
-  Future<void> _tellMama(NeedItem item) async {
+  Future<void> _sendToMama(NeedItem item) async {
+    final category = _category;
     final sentence = _sentenceOf(item);
-    final mamaReply = CommunicationTexts.mamaReply(
-      intro: _category.mamaIntro,
-      sentence: sentence,
-    );
 
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => NeedResultScreen(
           item: item,
           sentence: sentence,
-          mamaReply: mamaReply,
+          mamaIntro: category.mamaIntro,
           speechService: _speech,
         ),
       ),
@@ -82,9 +81,9 @@ class _WhatIWantScreenState extends State<WhatIWantScreen> {
   Widget build(BuildContext context) {
     final category = _category;
     final selectedItem = _selectedItem;
-    final teddyMessage = selectedItem == null
+    final teddyMessage = (selectedItem == null || _isPainCategory)
         ? category.teddyHint
-        : CommunicationTexts.teddyReady(category.actionLabel);
+        : _sentenceOf(selectedItem);
 
     return Scaffold(
       appBar: AppBar(
@@ -101,35 +100,6 @@ class _WhatIWantScreenState extends State<WhatIWantScreen> {
               onListen: () => _speech.speak(teddyMessage),
             ),
             const SizedBox(height: _gap),
-            SelectionStrip(
-              category: category,
-              selectedItem: selectedItem,
-              isPolite: _isPolite,
-              onPoliteToggled: () => setState(() => _isPolite = !_isPolite),
-            ),
-            const SizedBox(height: _gap),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: PrimaryActionButton(
-                    label: category.actionLabel,
-                    onPressed: selectedItem == null
-                        ? null
-                        : () => _tellMama(selectedItem),
-                  ),
-                ),
-                const SizedBox(width: _chipGap),
-                Expanded(
-                  child: SoundButton(
-                    onPressed: selectedItem == null
-                        ? null
-                        : () => _speech.speak(_sentenceOf(selectedItem)),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: _gap),
             Wrap(
               spacing: _chipGap,
               runSpacing: _chipGap,
@@ -144,11 +114,44 @@ class _WhatIWantScreenState extends State<WhatIWantScreen> {
               ],
             ),
             const SizedBox(height: _gap),
-            NeedCardGrid(
-              items: category.items,
-              selectedItem: selectedItem,
-              onItemSelected: (item) => setState(() => _selectedItem = item),
-            ),
+            if (_isPainCategory)
+              PainBodyMap(speechService: _speech)
+            else ...[
+              SelectionStrip(
+                category: category,
+                selectedItem: selectedItem,
+                isPolite: _isPolite,
+                onPoliteToggled: () => setState(() => _isPolite = !_isPolite),
+              ),
+              const SizedBox(height: _gap),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: PrimaryActionButton(
+                      label: category.actionLabel,
+                      onPressed: selectedItem == null
+                          ? null
+                          : () => _sendToMama(selectedItem),
+                    ),
+                  ),
+                  const SizedBox(width: _chipGap),
+                  Expanded(
+                    child: SoundButton(
+                      onPressed: selectedItem == null
+                          ? null
+                          : () => _speech.speak(_sentenceOf(selectedItem)),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: _gap),
+              NeedCardGrid(
+                items: category.items,
+                selectedItem: selectedItem,
+                onItemSelected: (item) => setState(() => _selectedItem = item),
+              ),
+            ],
           ],
         ),
       ),
