@@ -9,11 +9,12 @@ import '../games_images.dart';
 import '../games_styles.dart';
 import '../games_texts.dart';
 import '../logic/games_settings.dart';
+import '../models/game_kind.dart';
 import '../widgets/game_icon.dart';
 import '../widgets/games_image.dart';
 import '../widgets/thick_box.dart';
+import 'game_launcher.dart';
 import 'levels_screen.dart';
-import 'memory_game_screen.dart';
 
 /// Home screen of the games section: the list of games.
 /// It also owns the settings (the level chosen for the child), so they stay
@@ -36,7 +37,9 @@ class _GamesScreenState extends State<GamesScreen> {
   @override
   void initState() {
     super.initState();
-    _settings = GamesSettings(widget.storage ?? SharedPreferencesLevelStorage());
+    _settings = GamesSettings(
+      widget.storage ?? SharedPreferencesLevelStorage(),
+    );
     _settings.load();
   }
 
@@ -46,18 +49,24 @@ class _GamesScreenState extends State<GamesScreen> {
     super.dispose();
   }
 
-  void _openLevels() {
+  void _openLevels(GameKind game) {
+    // The child may have finished the game since the last time: read it again.
+    _settings.load();
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => LevelsScreen(settings: _settings, onPlay: _openGame),
+        builder: (_) => LevelsScreen(
+          game: game,
+          settings: _settings,
+          onPlay: (levelIndex) => _openGame(game, levelIndex),
+        ),
       ),
     );
   }
 
-  void _openGame(int levelIndex) {
+  void _openGame(GameKind game, int levelIndex) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => MemoryGameScreen(levelIndex: levelIndex),
+        builder: (_) => buildGameScreen(game, levelIndex),
       ),
     );
   }
@@ -77,10 +86,22 @@ class _GamesScreenState extends State<GamesScreen> {
               _ActivityCard(
                 title: GamesTexts.memoryCardsTitle,
                 imagePath: GamesImages.memoryCards,
-                onTap: _openLevels,
+                onTap: () => _openLevels(GameKind.memory),
               ),
-              // A new game: copy _ActivityCard here, with a SizedBox(height: 12)
-              // before it.
+              const SizedBox(height: 12),
+              _ActivityCard(
+                title: GamesTexts.puzzleTitle,
+                imagePath: GamesImages.puzzleCards,
+                onTap: () => _openLevels(GameKind.puzzle),
+              ),
+              const SizedBox(height: 12),
+              _ActivityCard(
+                title: GamesTexts.oddOneOutTitle,
+                imagePath: GamesImages.oddOneOutCards,
+                onTap: () => _openLevels(GameKind.oddOneOut),
+              ),
+              // A new game: add it to GameKind, then copy _ActivityCard here,
+              // with a SizedBox(height: 12) before it.
             ],
           ),
         ),

@@ -43,7 +43,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(GamesTexts.levelsTitle), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.chevron_right_rounded));
+    await tester.tap(find.byIcon(Icons.arrow_back));
     await tester.pumpAndSettle();
     expect(find.text(GamesTexts.levelsTitle), findsNothing);
     expect(find.text(GamesTexts.sectionSubtitle), findsOneWidget);
