@@ -1,54 +1,87 @@
 import 'package:flutter/foundation.dart';
 
 import '../data/level_storage.dart';
-import '../models/game_level.dart';
+import '../models/child_choice.dart';
+import '../models/game_kind.dart';
 
-/// The level the parents chose for the child.
-/// Screens listen to it, and it saves the choice through a [LevelStorage].
+/// The game and level the parents chose for the child, and the day the child
+/// finished the game. Screens listen to it, and it saves through a
+/// [LevelStorage].
 class GamesSettings extends ChangeNotifier {
   GamesSettings(this._storage);
 
   final LevelStorage _storage;
 
+  GameKind _selectedGame = GameKind.memory;
   int _selectedLevel = 0;
+  String? _finishedDay;
+
+  GameKind get selectedGame => _selectedGame;
 
   /// The number of the chosen level: 0, 1 or 2.
   int get selectedLevel => _selectedLevel;
 
-  GameLevel get level => GameLevel.all[_selectedLevel];
+  /// True if the child already finished the game on [day] (see `dayKey`).
+  bool isFinishedOn(String day) => _finishedDay == day;
 
-  /// Reads the saved choice. Keeps the first level if nothing was saved.
+  /// Reads what was saved. Keeps the first level of the memory game, and no
+  /// finished day, for anything that was not saved or cannot be read.
   Future<void> load() async {
-    final int? saved;
+    var changed = false;
+
     try {
-      saved = await _storage.read();
+      final saved = await _storage.read();
+      if (saved != null) {
+        final level = saved.level.clamp(0, saved.game.levelCount - 1).toInt();
+        if (saved.game != _selectedGame || level != _selectedLevel) {
+          _selectedGame = saved.game;
+          _selectedLevel = level;
+          changed = true;
+        }
+      }
     } on Object {
-      // The saved choice could not be read, so the first level stays.
-      return;
+      // The saved choice could not be read, so the first choice stays.
     }
-    if (saved == null) return;
-    final index = saved.clamp(0, GameLevel.all.length - 1).toInt();
-    if (index == _selectedLevel) return;
-    _selectedLevel = index;
-    notifyListeners();
+
+    try {
+      final day = await _storage.readFinishedDay();
+      if (day != _finishedDay) {
+        _finishedDay = day;
+        changed = true;
+      }
+    } on Object {
+      // The finished day could not be read, so the child can play.
+    }
+
+    if (changed) notifyListeners();
   }
 
-  /// Chooses a level for the child and saves it.
-  Future<void> select(int index) async {
-    RangeError.checkValueInInterval(
-      index,
-      0,
-      GameLevel.all.length - 1,
-      'index',
-    );
-    if (index != _selectedLevel) {
-      _selectedLevel = index;
+  /// Chooses a game and level for the child and saves them. This never opens
+  /// the game again on a day the child already finished: the new choice
+  /// shows up the next day.
+  Future<void> select(GameKind game, int level) async {
+    RangeError.checkValueInInterval(level, 0, game.levelCount - 1, 'level');
+    if (game != _selectedGame || level != _selectedLevel) {
+      _selectedGame = game;
+      _selectedLevel = level;
       notifyListeners();
     }
     try {
-      await _storage.write(index);
+      await _storage.write(ChildChoice(game, level));
     } on Object {
       // Saving is best effort: the choice still works until the app closes.
+    }
+  }
+
+  /// The child finished the game on [day]. It stays locked until the next
+  /// day.
+  Future<void> markFinished(String day) async {
+    _finishedDay = day;
+    notifyListeners();
+    try {
+      await _storage.writeFinishedDay(day);
+    } on Object {
+      // Saving is best effort: the game stays locked until the app closes.
     }
   }
 }

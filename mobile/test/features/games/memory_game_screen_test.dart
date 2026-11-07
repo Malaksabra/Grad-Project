@@ -64,7 +64,10 @@ void main() {
 
     expect(find.text(GamesTexts.messageStart), findsOneWidget);
     expect(find.text('2:00'), findsOneWidget);
-    expect(find.byKey(const ValueKey('card_back')), findsNWidgets(GameLevel.all[_levelIndex].cardCount));
+    expect(
+      find.byKey(const ValueKey('card_back')),
+      findsNWidgets(GameLevel.all[_levelIndex].cardCount),
+    );
   });
 
   testWidgets('the time does not run before the first card', (tester) async {
@@ -126,8 +129,10 @@ void main() {
     await tester.pumpWidget(_screen());
     final cards = _expectedCards();
     final wrong = _differentCards(cards);
-    final third = List.generate(cards.length, (i) => i)
-        .firstWhere((i) => i != wrong[0] && i != wrong[1]);
+    final third = List.generate(
+      cards.length,
+      (i) => i,
+    ).firstWhere((i) => i != wrong[0] && i != wrong[1]);
 
     await _tapCard(tester, wrong[0]);
     await _tapCard(tester, wrong[1]);

@@ -27,6 +27,12 @@ class GamesColors {
   static const Color line = Color(0xFFE6DEF5);
   static const Color surface = Color(0xFFF6F2FD);
 
+  // Covers the board when the round is over (the surface color at 90%).
+  static const Color overlay = Color(0xE6F6F2FD);
+
+  // The border of the right answer.
+  static const Color correct = Color(0xFF4CBB7F);
+
   // The star shown when the child wins.
   static const Color star = Color(0xFFF5C73B);
 }

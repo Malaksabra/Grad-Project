@@ -3,18 +3,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../games_colors.dart';
 import '../games_images.dart';
 import '../games_styles.dart';
+import '../games_colors.dart';
 import '../games_texts.dart';
+import '../logic/board_layout.dart';
 import '../logic/memory_game.dart';
 import '../models/game_level.dart';
-import '../widgets/game_button.dart';
+import '../widgets/end_panel.dart';
+import '../widgets/filled_grid.dart';
 import '../widgets/game_icon.dart';
+import '../widgets/game_play_layout.dart';
 import '../widgets/games_image.dart';
-import '../widgets/games_page.dart';
-import '../widgets/games_panel.dart';
-import '../widgets/guide_row.dart';
 import '../widgets/thick_box.dart';
 import '../widgets/time_label.dart';
 
@@ -26,6 +26,8 @@ class MemoryGameScreen extends StatefulWidget {
     required this.levelIndex,
     this.images = GamesImages.fruits,
     this.random,
+    this.isForChild = false,
+    this.onFinished,
   });
 
   /// The level number: 0, 1 or 2.
@@ -37,12 +39,19 @@ class MemoryGameScreen extends StatefulWidget {
   /// For tests only: makes the shuffle repeatable.
   final Random? random;
 
+  /// True on the child's page: the child cannot play the round again.
+  final bool isForChild;
+
+  /// Called once when the round ends, by winning or when the time is up.
+  final VoidCallback? onFinished;
+
   @override
   State<MemoryGameScreen> createState() => _MemoryGameScreenState();
 }
 
 class _MemoryGameScreenState extends State<MemoryGameScreen> {
   static const Duration _mismatchPause = Duration(seconds: 1);
+  static const double _gap = 10;
 
   late final GameLevel _level;
   late final MemoryGame _game;
@@ -50,6 +59,7 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
   Timer? _clock;
   Timer? _mismatchTimer;
   String _message = GamesTexts.messageStart;
+  bool _hasReportedEnd = false;
 
   @override
   void initState() {
@@ -74,8 +84,17 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
     _clock = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       setState(_game.tick);
-      if (_game.status != MemoryStatus.playing) timer.cancel();
+      if (_game.status != MemoryStatus.playing) {
+        timer.cancel();
+        _reportEnd();
+      }
     });
+  }
+
+  void _reportEnd() {
+    if (_hasReportedEnd || _game.status == MemoryStatus.playing) return;
+    _hasReportedEnd = true;
+    widget.onFinished?.call();
   }
 
   void _onCardTap(int index) {
@@ -94,7 +113,10 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
       };
     });
 
-    if (_game.status == MemoryStatus.won) _clock?.cancel();
+    if (_game.status == MemoryStatus.won) {
+      _clock?.cancel();
+      _reportEnd();
+    }
 
     if (outcome == FlipOutcome.mismatch) {
       _mismatchTimer = Timer(_mismatchPause, () {
@@ -108,6 +130,7 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
     _clock?.cancel();
     _clock = null;
     _mismatchTimer?.cancel();
+    _hasReportedEnd = false;
     setState(() {
       _game.restart();
       _message = GamesTexts.messageStart;
@@ -116,109 +139,49 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cards = _game.cards;
-    final playing = _game.status == MemoryStatus.playing;
-
-    return GamesPage(
-      title: GamesTexts.levelTitle(widget.levelIndex),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 6, 16, 28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const GuideRow(text: GamesTexts.gameGuide),
-            GamesPanel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          GamesTexts.gameTitle,
-                          style: GamesStyles.display(size: 19.2),
-                        ),
-                      ),
-                      TimeLabel(
-                        seconds: _game.remainingSeconds,
-                        style: GamesStyles.display(
-                          size: 20,
-                          color: GamesColors.text,
-                        ),
-                        iconSize: 26,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  _TimeBar(value: _game.remainingFraction),
-                  const SizedBox(height: 16),
-                  GridView.count(
-                    crossAxisCount: _level.columns,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: _level.cardAspectRatio,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      for (var i = 0; i < cards.length; i++)
-                        _CardView(
-                          key: ValueKey('card_$i'),
-                          card: cards[i],
-                          onTap: () => _onCardTap(i),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  if (playing)
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(minHeight: 27),
-                      child: Text(
-                        _message,
-                        style: GamesStyles.body(color: GamesColors.inkSoft),
-                      ),
-                    )
-                  else
-                    _EndPanel(
-                      won: _game.status == MemoryStatus.won,
-                      onPlayAgain: _newRound,
-                      onExit: () => Navigator.of(context).maybePop(),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return GamePlayLayout(
+      pageTitle: GamesTexts.levelTitle(widget.levelIndex),
+      guide: GamesTexts.gameGuide,
+      heading: GamesTexts.gameTitle,
+      trailing: TimeLabel(
+        seconds: _game.remainingSeconds,
+        style: GamesStyles.display(size: 20, color: GamesColors.text),
+        iconSize: 26,
       ),
+      timeFraction: _game.remainingFraction,
+      message: _message,
+      board: _buildBoard(),
+      result: _game.status == MemoryStatus.playing
+          ? null
+          : EndPanel(
+              won: _game.status == MemoryStatus.won,
+              onPlayAgain: widget.isForChild ? null : _newRound,
+              onExit: () => Navigator.of(context).maybePop(),
+            ),
     );
   }
-}
 
-/// The bar that gets shorter while the time runs out.
-class _TimeBar extends StatelessWidget {
-  const _TimeBar({required this.value});
-
-  /// From 1.0 (full time) to 0.0 (time is up).
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 14,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: GamesColors.line, width: 2),
-      ),
-      alignment: AlignmentDirectional.centerStart,
-      child: FractionallySizedBox(
-        widthFactor: value.clamp(0.0, 1.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: GamesColors.edge,
-            borderRadius: BorderRadius.circular(99),
+  Widget _buildBoard() {
+    final cards = _game.cards;
+    return LayoutBuilder(
+      builder: (context, box) {
+        final columns = bestColumns(
+          count: cards.length,
+          width: box.maxWidth,
+          height: box.maxHeight,
+          gap: _gap,
+        );
+        return FilledGrid(
+          columns: columns,
+          itemCount: cards.length,
+          gap: _gap,
+          itemBuilder: (context, i) => _CardView(
+            key: ValueKey('card_$i'),
+            card: cards[i],
+            onTap: () => _onCardTap(i),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -253,59 +216,6 @@ class _CardView extends StatelessWidget {
                 ),
               ),
       ),
-    );
-  }
-}
-
-/// What the child sees when the round is over.
-class _EndPanel extends StatelessWidget {
-  const _EndPanel({
-    required this.won,
-    required this.onPlayAgain,
-    required this.onExit,
-  });
-
-  final bool won;
-  final VoidCallback onPlayAgain;
-  final VoidCallback onExit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (won)
-          const Icon(Icons.star_rounded, size: 78, color: GamesColors.star)
-        else
-          const GameIcon(GamesImages.alarm, size: 64),
-        Text(
-          won ? GamesTexts.won : GamesTexts.timeUp,
-          textAlign: TextAlign.center,
-          style: GamesStyles.display(size: 24),
-        ),
-        if (!won)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              GamesTexts.tryAgainQuestion,
-              style: GamesStyles.body(color: GamesColors.inkSoft),
-            ),
-          ),
-        const SizedBox(height: 14),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            GameButton(
-              won ? GamesTexts.playAgain : GamesTexts.tryAgain,
-              primary: true,
-              big: true,
-              onTap: onPlayAgain,
-            ),
-            GameButton(GamesTexts.exit, big: true, onTap: onExit),
-          ],
-        ),
-      ],
     );
   }
 }
