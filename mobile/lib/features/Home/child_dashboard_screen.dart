@@ -4,7 +4,8 @@ import '../../features/daily_routines/routine_details_screen.dart';
 import '../../features/daily_routines/self_reliance_categories_screen.dart';
 import '../../features/social_situations/screens/social_situations_screen.dart';
 import '../../features/stories/stories_texts.dart';
-
+import '../../features/communication/screens/what_i_want_screen.dart';
+import '../../features/communication/screens/signs_screen.dart';
 class ChildDashboardScreen extends StatefulWidget {
   const ChildDashboardScreen({super.key});
 
@@ -41,16 +42,19 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
         // بدون شاشة انتقال حالياً (شبه الإشارات)
       },
       {
-        'title': 'أقول نفسي في إيه؟',
-        'icon': Icons.restaurant_menu_rounded,
-        'color': const Color(0xFFE65100),
-        'gradient': [const Color(0xFFFFF3E0), const Color(0xFFFFCC80)],
+      'title': 'أقول نفسي في إيه؟',
+      'icon': Icons.record_voice_over_rounded,
+      'color': const Color(0xFFE65100),
+      'gradient': [const Color(0xFFFFF3E0), const Color(0xFFFFCC80)],
+      'screen': const WhatIWantScreen(),
+
       },
       {
         'title': 'الإشارات ',
         'icon': Icons.waving_hand_rounded,
         'color': const Color(0xFF6A1B9A),
         'gradient': [const Color(0xFFF3E5F5), const Color(0xFFE1BEE7)],
+        'screen': const SignsScreen(),
       },
       {
         'title': StoriesTexts.sectionTitle,
