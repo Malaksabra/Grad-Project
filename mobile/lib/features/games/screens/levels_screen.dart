@@ -3,20 +3,31 @@ import 'package:flutter/material.dart';
 import '../games_colors.dart';
 import '../games_styles.dart';
 import '../games_texts.dart';
+import '../logic/day_key.dart';
 import '../logic/games_settings.dart';
-import '../models/game_level.dart';
+import '../models/game_kind.dart';
 import '../widgets/games_page.dart';
 import '../widgets/games_panel.dart';
 import '../widgets/guide_row.dart';
 import '../widgets/thick_box.dart';
 import '../widgets/time_label.dart';
 
-/// The levels page. The parent can try any level, and choose the one the
-/// child will find ready.
+/// The levels page of one game. The parent can try any level, and choose the
+/// game and level the child will find ready.
 class LevelsScreen extends StatelessWidget {
-  const LevelsScreen({super.key, required this.settings, required this.onPlay});
+  const LevelsScreen({
+    super.key,
+    required this.game,
+    required this.settings,
+    required this.onPlay,
+    this.now,
+  });
 
+  final GameKind game;
   final GamesSettings settings;
+
+  /// The current time. For tests only: lets a test choose the day.
+  final DateTime Function()? now;
 
   /// Called with the level number (0, 1 or 2) when the parent wants to try it.
   final ValueChanged<int> onPlay;
@@ -24,7 +35,7 @@ class LevelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GamesPage(
-      title: GamesTexts.memoryCardsTitle,
+      title: game.title,
       child: ListenableBuilder(
         listenable: settings,
         builder: (context, _) {
@@ -34,6 +45,8 @@ class LevelsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const GuideRow(text: GamesTexts.levelsGuide),
+                if (settings.isFinishedOn(dayKey((now ?? DateTime.now)())))
+                  const _FinishedNotice(),
                 GamesPanel(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,14 +64,17 @@ class LevelsScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 14),
-                      for (var i = 0; i < GameLevel.all.length; i++)
+                      for (var i = 0; i < game.levelCount; i++)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: _LevelOption(
+                            summary: game.levelSummary(i),
                             index: i,
-                            selected: settings.selectedLevel == i,
+                            selected:
+                                settings.selectedGame == game &&
+                                settings.selectedLevel == i,
                             onPlay: () => onPlay(i),
-                            onSelect: () => settings.select(i),
+                            onSelect: () => settings.select(game, i),
                           ),
                         ),
                     ],
@@ -73,14 +89,47 @@ class LevelsScreen extends StatelessWidget {
   }
 }
 
+/// Tells the parents that the child already played today.
+class _FinishedNotice extends StatelessWidget {
+  const _FinishedNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: ThickBox(
+        fill: GamesColors.background,
+        border: GamesColors.edge,
+        radius: BorderRadius.circular(24),
+        bottom: 4,
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            const Icon(Icons.star_rounded, size: 34, color: GamesColors.star),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                GamesTexts.finishedNotice,
+                style: GamesStyles.body(size: 15.2, color: GamesColors.text),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _LevelOption extends StatelessWidget {
   const _LevelOption({
+    required this.summary,
     required this.index,
     required this.selected,
     required this.onPlay,
     required this.onSelect,
   });
 
+  final LevelSummary summary;
   final int index;
   final bool selected;
   final VoidCallback onPlay;
@@ -88,7 +137,7 @@ class _LevelOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final level = GameLevel.all[index];
+    final seconds = summary.seconds;
     final ink = selected ? GamesColors.text : GamesColors.ink;
     final summaryStyle = GamesStyles.body(
       size: 14.7,
@@ -144,16 +193,20 @@ class _LevelOption extends StatelessWidget {
                         Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
+                            // A game without a clock shows only the count.
                             Text(
-                              '${GamesTexts.cardsCount(level.cardCount)}'
-                              '${GamesTexts.summarySeparator}',
+                              seconds == null
+                                  ? summary.countText
+                                  : '${summary.countText}'
+                                        '${GamesTexts.summarySeparator}',
                               style: summaryStyle,
                             ),
-                            TimeLabel(
-                              seconds: level.seconds,
-                              style: summaryStyle,
-                              iconSize: 18,
-                            ),
+                            if (seconds != null)
+                              TimeLabel(
+                                seconds: seconds,
+                                style: summaryStyle,
+                                iconSize: 18,
+                              ),
                           ],
                         ),
                       ],

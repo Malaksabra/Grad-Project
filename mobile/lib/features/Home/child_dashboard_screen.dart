@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // استيراد الشاشات الفعلية
 import '../../features/daily_routines/routine_details_screen.dart';
 import '../../features/daily_routines/self_reliance_categories_screen.dart';
+import '../../features/games/screens/child_game_screen.dart';
 import '../../features/social_situations/screens/social_situations_screen.dart';
 import '../../features/stories/stories_texts.dart';
 import '../../features/communication/screens/what_i_want_screen.dart';
@@ -39,7 +40,7 @@ class _ChildDashboardScreenState extends State<ChildDashboardScreen> {
         'icon': Icons.sports_esports_rounded,
         'color': const Color(0xFF7C3AED),
         'gradient': [const Color(0xFFF3E8FF), const Color(0xFFDDD6FE)],
-        // بدون شاشة انتقال حالياً (شبه الإشارات)
+        'screen': const ChildGameScreen(),
       },
       {
       'title': 'أقول نفسي في إيه؟',

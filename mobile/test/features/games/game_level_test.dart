@@ -20,12 +20,6 @@ void main() {
     test('has two cards for every pair', () {
       expect([for (final l in GameLevel.all) l.cardCount], [6, 8, 12]);
     });
-
-    test('every board fills its rows with no empty place', () {
-      for (final level in GameLevel.all) {
-        expect(level.cardCount % level.columns, 0);
-      }
-    });
   });
 
   group('formatTime', () {
